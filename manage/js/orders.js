@@ -681,7 +681,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${housenumber}</td>
                         <td>${order.shippingFees} EGP</td>
                         <td>${totalPrice} EGP</td>
-                        <td class="flex center align items inherit-color">
+                        <td class="flex center align items">
                             <div type="button" class="formbold-form-label addbtn pointer open-order-btn p-7">
                                 <i class="bi bi-plus-circle point" data-order-id="${orderId}"></i>
                             </div>
