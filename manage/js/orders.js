@@ -682,15 +682,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${order.shippingFees} EGP</td>
                         <td>${totalPrice} EGP</td>
                         <td class="flex center align items inherit-color">
-                            <button type="button" class="formbold-form-label addbtn pointer open-order-btn p-7">
+                            <div type="button" class="formbold-form-label addbtn pointer open-order-btn p-7">
                                 <i class="bi bi-plus-circle point" data-order-id="${orderId}"></i>
-                            </button>
-                            <button type="button" class="formbold-form-label addbtn pointer accept-order-btn p-7" data-order-id="${orderId}" id="Activate" onclick="updateOrderStatus('${orderId}', 'accepted', event)">
+                            </div>
+                            <div type="button" class="formbold-form-label addbtn pointer accept-order-btn p-7" data-order-id="${orderId}" id="Activate" onclick="updateOrderStatus('${orderId}', 'accepted', event)">
                                 <i class="bi bi-box-fill pointer"></i>
-                            </button>
-                            <button type="button" class="formbold-form-label addbtn pointer deaccept-order-btn p-7" data-order-id="${orderId}" id="Deactivate" onclick="updateOrderStatus('${orderId}', 'notaccepted', event)">
+                            </div>
+                            <div type="button" class="formbold-form-label addbtn pointer deaccept-order-btn p-7" data-order-id="${orderId}" id="Deactivate" onclick="updateOrderStatus('${orderId}', 'notaccepted', event)">
                                 <i class="bi bi-x-circle pointer"></i>
-                            </button>
+                            </div>
                         </td>
                     `;
         if (order.progress === "accepted") {
