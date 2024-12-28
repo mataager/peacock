@@ -1,4 +1,3 @@
-//add to cart action
 function addToCart() {
   const title = document.getElementById("productTitle").innerText;
   const brandName = document.getElementById("BrandName").innerText;
@@ -21,13 +20,27 @@ function addToCart() {
     productColor: productColor,
     price: productPrice,
     photourl: srcValue,
+    quantity: 1, // Initialize quantity
   };
 
   // Retrieve cart from local storage or initialize it as an empty array
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // Add the new item to the cart
-  cart.push(newItem);
+  // Check if an item with the same ID, size, and color already exists
+  const existingItem = cart.find(
+    (item) =>
+      item.id === newItem.id &&
+      item.productSize === newItem.productSize &&
+      item.productColor === newItem.productColor
+  );
+
+  if (existingItem) {
+    // If the item exists, increase its quantity
+    existingItem.quantity += 1;
+  } else {
+    // If the item doesn't exist, add it as a new item
+    cart.push(newItem);
+  }
 
   // Store the updated cart back to local storage
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -39,7 +52,9 @@ function addToCart() {
     showConfirmButton: false,
     timer: 1500, // Close the alert after 1.5 seconds
   });
+
   updateCartCount();
+
   // Function to reload the window
   function reloadWindow() {
     location.reload();
@@ -80,15 +95,26 @@ function openCartModal(productId) {
 
       // Check and set default image source if necessary
       setDefaultImageSource(product);
-
       modalContent.innerHTML = `
-    <div class="flex center flex-end width-available" onclick="closeModal()">
-        <button type="button" class="Add-to-Cart" id="perv4Button">
+      <div class="flex justify-content-space-between width-available modal-header">
+      <div class="flex center flex-end " onclick="productDetails('${productId}')">
+        <button style="margin: 0px ;border-radius: 8px 0px 8px 0px" type="button" class="Add-to-Cart" id="perv4Button">
+        <i class="bi bi-box-arrow-in-down-right"></i>
+        </button>
+    </div>
+    <div class="flex center flex-end" onclick="closeModal()">
+        <button style="margin: 0px ;border-radius: 0px 8px 0px 8px" type="button" class="Add-to-Cart" id="perv4Button">
             <i class="bi bi-x-lg"></i>
         </button>
     </div>
-    <h5 class="m-5" id="BrandName">${product["Brand-Name"]}</h5>
-    <h2 class="m-5" id="productTitle">${product["product-title"]}</h2>
+    
+    </div>
+    <h5 class="m-5 pointer" id="BrandName" onclick="brand('${
+      product["Brand-Name"]
+    }')">${product["Brand-Name"]}</h5>
+     <h2 class="m-5 pointer" onclick="productDetails('${productId}')" id="productTitle">${
+        product["product-title"]
+      }</h2>
     ${
       saleAmount
         ? `<del id="preprice" class="m-5 mb-10">${originalPrice}</del>`
@@ -125,17 +151,18 @@ function openCartModal(productId) {
         </div>
         
       
-        <h3 class="m-5 flex center align-items">Size: <p id="product-Size"></p></h3>
+        <div class="size m-5"><h3 class="m-5 flex pb-7 center align-items">Size: <p id="product-Size"></p></h3><div id="size-hint-text" style="display: none; font-size: 16px; color: #333; margin-top: 10px;"></div></div>
         <ul class="m-5 flex">${Object.keys(product.sizes)
           .map(
             (size) =>
               `<div class="size-radio m-5" onclick="SizeRef('${size}')"><label class="radio-input_option"><span class="size-value">${size}</span></label></div>`
           )
           .join("")}</ul>
-        <h3 class="m-5 flex">Color: <p id="product-color"></p></h3>
+        <div class="size m-5"><h3 class="m-5 flex pb-7 center align-items">Color: <p id="product-color"></p></h3><div id="color-hint-text" style="display: none; font-size: 16px; color: #333; margin-top: 10px;"></div></div>
+        
         <ul id="product-colors" class="m-5 flex flex-wrap hidden"></ul>
         <div class="m-5 flex align-items">
-         SKU :<p id="productID">${productId}</p> 
+         SKU:<p id="productID"> ${productId}</p> 
         </div>
         <div class="m-5">
           <button id="addToCartButton" onclick="addToCart()" class="Add-to-Cart" disabled style="opacity: 0.5;">Add to Cart <i class="bi bi-exclamation-lg"></i></button>
@@ -147,6 +174,16 @@ function openCartModal(productId) {
       const modal = document.querySelector(".modal");
       document.body.style.overflow = "hidden"; // Hide body overflow
       modal.classList.add("show"); // Show modal with animation
+      // Close modal if clicking outside of the modal content
+      modal.addEventListener("click", function (event) {
+        if (!modalContent.contains(event.target)) {
+          closeModal();
+        }
+      });
+      // Clear size and color, then update the cart button state
+      document.getElementById("product-Size").innerText = ""; // Clear size
+      document.getElementById("product-color").innerText = ""; // Clear color
+      updateAddToCartButtonState(); // Update button state
     })
     .catch((error) => {
       console.error("Error fetching product details:", error);
@@ -167,19 +204,9 @@ function colorRef(color) {
   const choosedColor = document.getElementById("product-color");
   choosedColor.innerText = color;
 
-  // Update the images based on the selected color
+  // Update the images for the selected color
   if (product.sizes[size] && product.sizes[size][color]) {
     const colorDetails = product.sizes[size][color];
-    // Check and set default image source if necessary
-    setDefaultImageSource_PD(
-      colorDetails,
-      "img1",
-      "img2",
-      "img3",
-      "img4",
-      "img5",
-      "img6"
-    );
 
     document.getElementById("productImage").src = colorDetails.img1;
     document.getElementById("productImage2").src = colorDetails.img2;
@@ -189,26 +216,39 @@ function colorRef(color) {
     document.getElementById("productImage6").src = colorDetails.img6;
   }
 
-  // Update the add to cart button state
+  // Highlight the selected color
+  const colorOptions = document.querySelectorAll(".color-option");
+  colorOptions.forEach((option) => {
+    option.style.borderBottom =
+      option.dataset.colorName === color ? "5px solid #c1c1c1" : "none";
+    replaceInvalidImages();
+  });
+
   updateAddToCartButtonState();
 }
 
+// Call the function after the images are loaded into the DOM
+
 function SizeRef(size) {
-  // Get the product details from the modal content
   const modalContent = document.querySelector(".modal-content");
   const product = modalContent.productDetails;
-  const choosedsize = document.getElementById("product-Size");
-
-  // Clear the color when the size changes to prevent semantic errors
+  const choosedSize = document.getElementById("product-Size");
   const choosedColor = document.getElementById("product-color");
+
+  // Clear the color when size changes
   choosedColor.innerText = "";
+  choosedSize.innerText = size;
 
-  choosedsize.innerText = size;
+  // Update size buttons' styles
+  const sizeButtons = document.querySelectorAll(".size-radio");
+  sizeButtons.forEach((button) => {
+    button.style.backgroundColor =
+      button.textContent.trim() === size ? "#333" : "";
+    button.style.color = button.textContent.trim() === size ? "#fff" : "#000";
+  });
 
-  // Find the colors available for the selected size
+  // Display available colors for the selected size
   const colorsForSize = product.sizes[size];
-
-  // Render the colors for the selected size with the onclick attribute
   const colorList = modalContent.querySelector("#product-colors");
   colorList.innerHTML = Object.keys(colorsForSize)
     .map(
@@ -218,31 +258,75 @@ function SizeRef(size) {
     .join("");
   colorList.classList.remove("hidden");
 
-  // Update the add to cart button state
   updateAddToCartButtonState();
 }
 
 function updateAddToCartButtonState() {
-  const size = document.getElementById("product-Size").innerText;
-  const color = document.getElementById("product-color").innerText;
+  const size = document.getElementById("product-Size").innerText.trim(); // Get the selected size
+  const color = document.getElementById("product-color").innerText.trim(); // Get the selected color
   const addToCartButton = document.getElementById("addToCartButton");
+  const sizeHintTextElement = document.getElementById("size-hint-text");
+  const colorHintTextElement = document.getElementById("color-hint-text");
 
-  if (size && color) {
-    addToCartButton.disabled = false;
-    addToCartButton.style.opacity = 1;
-    addToCartButton.innerHTML = 'Add to Cart <i class="bi bi-bag-check"></i>';
-    addToCartButton.onclick = addToCart;
-  } else {
+  // Handle size hint
+  if (!size) {
+    if (sizeHintTextElement) {
+      sizeHintTextElement.innerText = "Must choose a size!";
+      sizeHintTextElement.style.display = "block";
+      sizeHintTextElement.classList.add("rolling-animation");
+
+      // Add underline animation
+    }
+
+    // Disable "Add to Cart" button
     addToCartButton.disabled = true;
     addToCartButton.style.opacity = 0.5;
     addToCartButton.innerHTML =
       'Add to Cart <i class="bi bi-exclamation-lg"></i>';
     addToCartButton.onclick = null;
+    return;
   }
+
+  // Hide size hint if size is selected
+  if (sizeHintTextElement) {
+    sizeHintTextElement.style.display = "none";
+    sizeHintTextElement.classList.remove("rolling-animation");
+    sizeHintTextElement.innerHTML = ""; // Clear dynamically added underline
+  }
+
+  // Handle color hint
+  if (!color) {
+    if (colorHintTextElement) {
+      colorHintTextElement.innerText = "Must choose a color!";
+      colorHintTextElement.style.display = "block";
+      colorHintTextElement.classList.add("rolling-animation");
+
+      // Add underline animation
+    }
+
+    // Disable "Add to Cart" button
+    addToCartButton.disabled = true;
+    addToCartButton.style.opacity = 0.5;
+    addToCartButton.innerHTML =
+      'Add to Cart <i class="bi bi-exclamation-lg"></i>';
+    addToCartButton.onclick = null;
+    return;
+  }
+
+  // Hide color hint if color is selected
+  if (colorHintTextElement) {
+    colorHintTextElement.style.display = "none";
+    colorHintTextElement.classList.remove("rolling-animation");
+    colorHintTextElement.innerHTML = ""; // Clear dynamically added underline
+  }
+
+  // Enable "Add to Cart" button when both size and color are selected
+  addToCartButton.disabled = false;
+  addToCartButton.style.opacity = 1;
+  addToCartButton.innerHTML = 'Add to Cart <i class="bi bi-bag-check"></i>';
+  addToCartButton.onclick = addToCart;
 }
 
-// Function to show the previous image
-// Keep track of the currently active image index
 let currentIndex = 0;
 
 // Array of image element IDs
@@ -278,3 +362,21 @@ function nextImage() {
   // Add the "active" class to the new current image
   document.getElementById(imageIds[currentIndex]).classList.add("active");
 }
+
+//
+function replaceInvalidImages() {
+  // Select all <img> elements inside the container
+  const images = document.querySelectorAll(".content-photo-container img");
+
+  images.forEach((img) => {
+    const src = img.getAttribute("src");
+    // Check if the src is empty, "undefined", or null
+    if (!src || src === "undefined" || src.trim() === "") {
+      // Assign the placeholder image URL
+      img.src =
+        "https://i.imgur.com/gLKw3OD_d.webp?maxwidth=760&fidelity=grand";
+    }
+  });
+}
+// Call the function after the images are loaded into the DOM
+replaceInvalidImages();

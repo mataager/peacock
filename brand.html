@@ -20,177 +20,159 @@
         href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./assets/js/static.js"></script>
     <script src="./assets/js/search-product.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./assets/jq/jquery.js"></script>
     <script src="./assets/js/image-error.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 </head>
 
 <div class="preloader" id="preloader">
     <img src="favicon.png" alt="Your Image" width="40" height="40">
     <div class="loader"></div>
 </div>
-<header class="header" data-header="">
-    <div class="header__bar">Free Shipping On Orders Over <div class="m-x-3" id="free-shipping"></div> EGP</div>
-    <div class="container">
+<article>
+    <header class="header" data-header="">
+        <div class="header__bar">Free Shipping On Orders Over <div class="m-x-3" id="free-shipping"></div> EGP</div>
+        <div class="container">
 
-        <div class="overlay" data-overlay=""></div>
+            <div class="overlay" data-overlay=""></div>
 
-        <a href="./index.html" class="logo">
-            <img src="./assets/images/iicon.svg" width="160" height="50" alt="">
-        </a>
-
-        <button class="nav-open-btn" data-nav-open-btn="" aria-label="Open Menu">
-            <ion-icon name="menu-outline" role="img" class="md hydrated" aria-label="menu outline"></ion-icon>
-        </button>
-
-        <nav class="navbar" data-navbar="">
-
-            <button class="nav-close-btn black-font" data-nav-close-btn="" aria-label="Close Menu">
-                <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
-            </button>
-
-            <a href="#" class="logo bg-white">
-                <img src="./assets/images/iicon.svg" width="190" height="50" alt="">
+            <a href="./index.html" class="logo">
+                <img src="./assets/images/iicon.svg" width="160" height="50" alt="">
             </a>
 
-            <ul class="navbar-list">
-                <li class="navbar-item">
-                    <a href="#" class="navbar-link" onclick="changeFrameSrc('index.html')">Home</a>
-                </li>
+            <button class="nav-open-btn" data-nav-open-btn="" aria-label="Open Menu">
+                <ion-icon name="menu-outline" role="img" class="md hydrated" aria-label="menu outline"></ion-icon>
+            </button>
 
-                <li class="navbar-item" id="megamenu" data-mega-menu>
-                    <div class="flex align-items justify-content-space-between">
-                        <a href="#" class="navbar-link" onclick="changeFrameSrc('Products.html')">Products</a>
-                        <a id="open-category" class="rotate open-category open-category-btn"><i
-                                class="bi bi-plus"></i></a>
-                    </div>
-                    <div class="mega-menu flex-direction-column" id="mega-menu">
+            <nav class="navbar" data-navbar="">
 
-                    </div>
-                </li>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        // Select the navbar item that contains the mega menu
-                        const navbarItem = document.getElementById('megamenu');
-                        const toggleIcon = document.getElementById('open-category');
-                        const categoryHeaders = document.querySelectorAll('.menu-category h4');
+                <button class="nav-close-btn black-font" data-nav-close-btn="" aria-label="Close Menu">
+                    <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
+                </button>
 
-                        // Toggle mega menu display on click for smaller screens
-                        toggleIcon.addEventListener('click', (e) => {
-                            e.stopPropagation(); // Prevent triggering other click events
-                            navbarItem.classList.toggle('active');
+                <a href="#" class="logo bg-white">
+                    <img src="./assets/images/iicon.svg" width="190" height="50" alt="">
+                </a>
 
-                            // Toggle icon rotation and change icon class
-                            if (navbarItem.classList.contains('active')) {
-                                toggleIcon.classList.add('rotate-360');
-                                toggleIcon.classList.remove('rotate-back');
-                                toggleIcon.innerHTML = '<i class="bi bi-dash"></i>';
-                            } else {
-                                toggleIcon.classList.add('rotate-back');
-                                toggleIcon.classList.remove('rotate-360');
-                                toggleIcon.innerHTML = '<i class="bi bi-plus"></i>';
-                            }
-                        });
+                <ul class="navbar-list">
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" onclick="changeFrameSrc('index.html')">Home</a>
+                    </li>
+                    <!-- <li class="navbar-item">
+                                            <a href="#" class="navbar-link" onclick="changeFrameSrc('About.html')">About</a>
+                                        </li> -->
+                    <li class="navbar-item" id="megamenu" data-mega-menu>
+                        <div class="flex align-items justify-content-space-between">
+                            <a href="#" class="navbar-link" onclick="changeFrameSrc('Products.html')">Products</a>
+                            <a id="open-category" class="rotate open-category open-category-btn"><i
+                                    class="bi bi-plus"></i></a>
+                        </div>
+                        <div class="mega-menu flex-direction-column" id="mega-menu">
 
-                        // Add click event listeners to all category headers (h4)
-                        categoryHeaders.forEach(header => {
-                            header.addEventListener('click', (e) => {
-                                e.stopPropagation(); // Prevent click from closing the navbar
-                                const category = header.parentElement;
-                                category.classList.toggle('active');
+                        </div>
+                    </li>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            // Select the navbar item that contains the mega menu
+                            const navbarItem = document.getElementById('megamenu');
+                            const toggleIcon = document.getElementById('open-category');
+                            const categoryHeaders = document.querySelectorAll('.menu-category h4');
+
+                            // Toggle mega menu display on click for smaller screens
+                            toggleIcon.addEventListener('click', (e) => {
+                                e.stopPropagation(); // Prevent triggering other click events
+                                navbarItem.classList.toggle('active');
+
+                                // Toggle icon rotation and change icon class
+                                if (navbarItem.classList.contains('active')) {
+                                    toggleIcon.classList.add('rotate-360');
+                                    toggleIcon.classList.remove('rotate-back');
+                                    toggleIcon.innerHTML = '<i class="bi bi-dash"></i>';
+                                } else {
+                                    toggleIcon.classList.add('rotate-back');
+                                    toggleIcon.classList.remove('rotate-360');
+                                    toggleIcon.innerHTML = '<i class="bi bi-plus"></i>';
+                                }
+                            });
+
+                            // Add click event listeners to all category headers (h4)
+                            categoryHeaders.forEach(header => {
+                                header.addEventListener('click', (e) => {
+                                    e.stopPropagation(); // Prevent click from closing the navbar
+                                    const category = header.parentElement;
+                                    category.classList.toggle('active');
+                                });
+                            });
+
+                            // Close mega menu when clicking outside
+                            document.addEventListener('click', (e) => {
+                                if (!navbarItem.contains(e.target)) {
+                                    navbarItem.classList.remove('active');
+                                    toggleIcon.classList.remove('rotate-360');
+                                    toggleIcon.classList.add('rotate-back');
+                                    toggleIcon.innerHTML = '<i class="bi bi-plus"></i>';
+                                }
                             });
                         });
 
-                        // Close mega menu when clicking outside
-                        document.addEventListener('click', (e) => {
-                            if (!navbarItem.contains(e.target)) {
-                                navbarItem.classList.remove('active');
-                                toggleIcon.classList.remove('rotate-360');
-                                toggleIcon.classList.add('rotate-back');
-                                toggleIcon.innerHTML = '<i class="bi bi-plus"></i>';
-                            }
-                        });
-                    });
+                    </script>
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link red-txt" onclick="changeFrameSrc('sale.html')">Sale</a>
+                    </li>
 
-                </script>
-                <li class="navbar-item">
-                    <a href="#" class="navbar-link red-txt" onclick="changeFrameSrc('sale.html')">Sale</a>
-                </li>
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" onclick="changeFrameSrc('Contact.html')">Contact</a>
+                    </li>
+                </ul>
+                <ul class="nav-action-list">
 
-                <li class="navbar-item">
-                    <a href="#" class="navbar-link" onclick="changeFrameSrc('Contact.html')">Contact</a>
-                </li>
-            </ul>
-            <ul class="nav-action-list">
-
-                <li class="li-action" id="search-li">
+                    <li class="li-action" id="search-li">
 
 
-                </li>
-                <li class="navbar-item li-action">
-                    <button class="nav-action-btn" onclick="changeFrameSrc('Cart.html')">
-                        <ion-icon name="bag-outline" aria-hidden="true" role="img" class="md hydrated"></ion-icon>
-                        <data class="nav-action-text">Basket: <strong class="cart-amount" id="cart-amount">0
-                                E£</strong></data>
-                        <data id="cartItemCount" class="nav-action-badge" aria-hidden="true">0</data>
-                    </button>
-                </li>
-                <button class="nav-action-btn" onclick="changeFrameSrc('account.html')">
-                    <ion-icon name="person-outline"></ion-icon>
-                    <span class="nav-action-text">Account</span>
-                </button>
-                </li>
-                <li>
-                    <button class="nav-action-btn hidden">
-                        <ion-icon name="heart-outline" aria-hidden="true" role="img" class="md hydrated"></ion-icon>
+                    </li>
+                    <li class="navbar-item li-action">
+                        <button class="nav-action-btn" onclick="changeFrameSrc('Cart.html')">
+                            <ion-icon name="bag-outline" aria-hidden="true" role="img" class="md hydrated"></ion-icon>
+                            <data class="nav-action-text">Basket: <strong class="cart-amount" id="cart-amount">0
+                                    E£</strong></data>
+                            <data id="cartItemCount" class="nav-action-badge" aria-hidden="true">0</data>
+                        </button>
+                    </li>
+                    <li class="navbar-item li-action">
+                        <button class="nav-action-btn" onclick="changeFrameSrc('account.html')">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <span class="nav-action-text">Account</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-action-btn hidden">
+                            <ion-icon name="heart-outline" aria-hidden="true" role="img" class="md hydrated"></ion-icon>
 
-                        <span class="nav-action-text">Wishlist</span>
+                            <span class="nav-action-text">Wishlist</span>
 
-                        <data class="nav-action-badge" value="5" aria-hidden="true">5</data>
-                    </button>
-                </li>
-            </ul>
+                            <data class="nav-action-badge" value="5" aria-hidden="true">5</data>
+                        </button>
+                    </li>
+                </ul>
 
-        </nav>
+            </nav>
 
-    </div>
-</header>
-<article>
-    <div class="sale-animation-bar">
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-        <span class="sale-animation-txt">SALE</span>
-
-
-        <!-- Duplicate for continuous effect -->
-    </div>
+        </div>
+    </header>
 
     <section class="section product">
         <div class="container pt-10">
             <div class="flex align-items justify-content-space-between">
                 <div class="flex align-items section-title">
-                    <h5 class="grey pointer" onclick="changeFrameSrc('index.html')">Home</h5>/
-                    <h5>Sale</h5>
+                    <h5 class="grey pointer" onclick="changeFrameSrc('index.html')">Home/</h5>
+                    <h5 id="brand-title"></h5>
                 </div>
 
-                <!-- Sort By Dropdown -->
                 <div class="filter-container flex center">
                     <button id="filterBtn" class="filter-btn">Filters <i class="bi bi-funnel-fill"></i></button>
                     <div id="sidebar" class="filter-sidebar">
@@ -198,6 +180,7 @@
                     </div>
                 </div>
             </div>
+
             <ul class="product-list">
 
 
@@ -250,6 +233,7 @@
 </script>
 
 </main>
+
 <footer class="footer">
     <div class="footer-top section">
         <div class="container">
@@ -302,6 +286,15 @@
                         <p class="footer-list-title">Contact Us</p>
                     </li>
 
+                    <!-- <li>
+                        <address class="footer-link">
+                            <ion-icon name="location" role="img" class="md hydrated" aria-label="location"></ion-icon>
+
+                            <span class="footer-link-text hidden">
+                                type any addrress
+                            </span>
+                        </address>
+                    </li> -->
 
                     <li>
                         <a href="tel:" id="store-call" class="footer-link">
@@ -373,18 +366,16 @@
 <a href="#top" class="go-top-btn" data-go-top="">
     <ion-icon name="arrow-up-outline" role="img" class="md hydrated" aria-label="arrow up outline"></ion-icon>
 </a>
-<!-- 
-    - custom js link
-  -->
-<script src="./assets/js/store-contact.js"></script>
-<script src="./assets/js/sale.js"></script>
-<script src="./assets/js/filter.js"></script>
-<script src="./assets/js/cart-modal.js"></script>
 
+
+<script src="./assets/js/cart-modal.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule="" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script src="./assets/js/route.js"></script>
 <script src="./assets/js/flip-img.js"></script>
+<script src="./assets/js/brand-fetch.js"></script>
+<script src="./assets/js/filter.js"></script>
+<script src="./assets/js/store-contact.js"></script>
 <script src="./assets/js/update-cart-amont.js"></script>
 <script src="./assets/js/report.js"></script>
 <script src="./assets/js/all.js"></script>

@@ -166,7 +166,7 @@
 </header>
 <article>
 
-    <section class="section product p-20">
+    <section class="section product">
         <div class="container pt-10">
             <div class="flex align-items justify-content-space-between">
                 <div class="flex align-items section-title">
@@ -181,6 +181,47 @@
                     </div>
                 </div>
             </div>
+            <div class=" align-items center pb-20 inlines-button">
+                <button id="1inline" class="grid-button"><img src="./assets/icons/1inline.svg"></button>
+                <button id="2inline" class="grid-button"> <img src="./assets/icons/2inline.svg"></button>
+            </div>
+            <script>
+                // Functionality for the 1inline button
+                document.getElementById('1inline').addEventListener('click', function () {
+                    const container = document.querySelector('.product-list');
+
+                    if (container) {
+                        // Remove product-list and add product-grid
+                        container.classList.remove('product-list');
+                        container.classList.add('product-grid');
+                    }
+
+                    // Update button active state
+                    document.getElementById('1inline').classList.add('active');
+                    document.getElementById('2inline').classList.remove('active');
+                });
+
+                // Functionality for the 2inline button
+                document.getElementById('2inline').addEventListener('click', function () {
+                    const container = document.querySelector('.product-grid');
+
+                    if (container) {
+                        // Remove product-grid and add product-list
+                        container.classList.remove('product-grid');
+                        container.classList.add('product-list');
+                    }
+
+                    // Update button active state
+                    document.getElementById('2inline').classList.add('active');
+                    document.getElementById('1inline').classList.remove('active');
+                });
+            </script>
+
+
+
+
+
+
 
             <ul class="product-list">
 
@@ -208,6 +249,14 @@
             <!-- Product details will be inserted here dynamically -->
         </div>
     </div>
+    <div id="modal-fav" class="modal">
+        <div id="modal-fav-content" class="fav-modal-content">
+
+        </div>
+    </div>
+
+    <script src="./assets/js/addfavouriteproduct.js"></script>
+
 
 
 </article>

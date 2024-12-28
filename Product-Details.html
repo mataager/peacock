@@ -24,6 +24,7 @@
     <script src="./assets/js/static.js"></script>
     <script src="./assets/js/search-product.js"></script>
     <script src="./assets/js/image-error.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -172,25 +173,7 @@
                     <div class="flex">
                         <div id="product-div" class="flex center">
 
-                            <!-- <div class="content-photo-container">
-                                <button id="previous-button" class="previous-button none-op"><i
-                                        class="bi bi-arrow-left-short arrow"></i></button>
-                                    <img id="productImage" class="m-5 product-image active"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                    <img id="productImage2" class="m-5 product-image"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                    <img id="productImage3" class="m-5 product-image active"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                    <img id="productImage4" class="m-5 product-image"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                    <img id="productImage5" class="m-5 product-image active"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                    <img id="productImage6" class="m-5 product-image"
-                                        style="height: min-content;width: 30%;" src="" alt="Product Image">
-                                
-                                <button id="next-button" class="next-button none-op"><i
-                                        class="bi bi-arrow-right-short arrow"></i></button>
-                            </div> -->
+
                             <div class="content-photo-container">
                                 <button id="previous-button" class="previous-button none-op">
                                     <i class="bi bi-arrow-left-short arrow"></i>
@@ -207,7 +190,7 @@
                                     <i class="bi bi-arrow-right-short arrow"></i>
                                 </button>
                             </div>
-                            
+
 
                             <script>
                                 const images = document.querySelectorAll('.product-image');
@@ -240,21 +223,34 @@
                                 <p id="productPrice" class="m-5 mb-10"></p>
 
                                 <div class="size m-5 mb-10">
-                                    <label class="m-5 flex" for="product-Size">
+                                    <label class="m-5 flex pb-7" for="product-Size">
                                         Size:<p id="product-Size"> </p>
                                     </label>
+                                    <div class="rolling-container rolling-animation" id="size-hint-text">
+
+                                    </div>
+
                                     <div role="radiogroup" class="radio-group size-tabs mb-10">
                                     </div>
                                 </div>
 
                                 <div class="color-selector m-5 mb-10">
-                                    <label class="m-5 flex align-items" for="product-color">Color:<p id="product-color">
-                                        <p class="hint-sml" id="hint">Choose size first!</p>
+                                    <label class="m-5 flex align-items pb-7" for="product-color">Color:<p
+                                            id="product-color">
+                                        <div id="hint" class="hint-text"></div>
                                         </p>
                                     </label>
-                                    <div class="color-options m-5 flex-wrap width-80 mb-10">
-
+                                    <div id="color-hint-text"
+                                        style="display: none; font-size: 16px; color: #333; margin-top: 10px;">
                                     </div>
+
+
+
+                                    <div class="color-options m-5 flex-wrap width-80 mb-10">
+                                    </div>
+                                    <h5 id="stockContainer" class="mb-10 m-5 flex pl-0 hidden">
+                                        <p id="stockMessage"></p>
+                                    </h5>
                                     <h5 class="mb-10 m-5 flex pl-0">SKU:<p id="productID"></p>
                                     </h5>
                                 </div>
@@ -286,62 +282,38 @@
                                     </div>
 
                                 </div>
-                                
+                                <div class="m-5 mb-10">
+                                    <button id="shareProductButton" class="Share-Product">
+                                        Copy Link <i class="bi bi-link-45deg"></i>
+                                    </button>
+                                    <div id="copyMessage" style="display: none; color: green; margin-top: 10px;">Link
+                                        copied!</div>
+                                </div>
+                                <div class="m-5 mb-10">
+                                    <div class="social-share-buttons">
+                                        <a id="shareFacebook" class="circle-button facebook hidden" href="#"
+                                            target="_blank" title="Share on Facebook">
+                                            <i class="bi bi-facebook"></i>
+                                        </a>
+                                        <a id="shareWhatsApp" class="circle-button whatsapp" href="#" target="_blank"
+                                            title="Share on WhatsApp">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
+                                        <a id="shareInstagram" class="circle-button instagram hidden" href="#"
+                                            title="Share on Instagram">
+                                            <i class="bi bi-instagram"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+
+
+
 
                                 <!--cart validation-->
+
+
                                 <script>
-                                    // Function to check if elements are empty and toggle button state
-                                    function checkAndToggleButton(sizeId, colorId, buttonId) {
-                                        const sizeElement = document.getElementById(sizeId);
-                                        const colorElement = document.getElementById(colorId);
-                                        const buttonElement = document.getElementById(buttonId);
-                                        const carti = buttonElement.querySelector('i'); // Get the icon element
-
-
-                                        // Check if either size or color element is empty
-                                        if (!sizeElement.innerText.trim() || !colorElement.innerText.trim()) {
-                                            buttonElement.disabled = true; // Disable the button
-                                            buttonElement.style.opacity = '0.5'; // Set opacity to 0.5
-                                            carti.classList.remove('bi-bag-check');
-                                            carti.classList.add('bi-exclamation-lg');
-                                            buttonElement.removeAttribute('onclick'); // Remove onclick attribute if any
-                                        } else {
-                                            buttonElement.disabled = false; // Enable the button
-                                            buttonElement.style.opacity = '1'; // Set opacity to 1
-                                            carti.classList.remove('bi-exclamation-lg');
-                                            carti.classList.add('bi-bag-check');
-                                            buttonElement.setAttribute('onclick', 'addToCart()'); // Add onclick attribute
-                                        }
-                                    }
-
-                                    // Add event listeners for size and color selection
-                                    const sizeOptions = document.querySelectorAll(".size-radio");
-                                    sizeOptions.forEach(option => {
-                                        option.addEventListener("click", function () {
-                                            const sizeElement = document.getElementById("product-Size");
-                                            sizeElement.innerText = option.querySelector(".size-value").innerText;
-                                            checkAndToggleButton("product-Size", "product-color", "addToCartButton");
-                                        });
-                                    });
-
-                                    const color = document.querySelectorAll(".color-option");
-                                    color.forEach(option => {
-                                        option.addEventListener("click", function () {
-                                            const colorElement = document.getElementById("product-color");
-                                            colorElement.innerText = option.getAttribute("data-color-name");
-                                            checkAndToggleButton("product-Size", "product-color", "addToCartButton");
-                                        });
-                                    });
-
-                                    // Example of updating the size and color elements
-                                    // and calling the function to check and toggle button state on page load
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        checkAndToggleButton("product-Size", "product-color", "addToCartButton");
-                                    });
-                                </script>
-                                <!-- add to cart-->
-                                <script>
-
                                     function addToCart() {
                                         const title = document.getElementById("productTitle").innerText;
                                         const brandName = document.getElementById("BrandName").innerText;
@@ -352,10 +324,7 @@
 
                                         // Get the reference to the img element
                                         const productImage = document.getElementById('productImage');
-
-                                        // Get the src attribute value
                                         const srcValue = productImage.getAttribute('src');
-
 
                                         const newItem = {
                                             id: productID,
@@ -364,19 +333,30 @@
                                             productSize: productSize,
                                             productColor: productColor,
                                             price: productPrice,
-                                            photourl: srcValue
+                                            photourl: srcValue,
+                                            quantity: 1 // Initialize quantity
                                         };
 
                                         // Retrieve cart from local storage or initialize it as an empty array
                                         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-                                        // Add the new item to the cart
-                                        cart.push(newItem);
+                                        // Check if an item with the same ID, size, and color already exists
+                                        const existingItem = cart.find(item =>
+                                            item.id === newItem.id &&
+                                            item.productSize === newItem.productSize &&
+                                            item.productColor === newItem.productColor
+                                        );
+
+                                        if (existingItem) {
+                                            // If the item exists, increase its quantity
+                                            existingItem.quantity += 1;
+                                        } else {
+                                            // If the item doesn't exist, add it as a new item
+                                            cart.push(newItem);
+                                        }
 
                                         // Store the updated cart back to local storage
                                         localStorage.setItem('cart', JSON.stringify(cart));
-
-
 
                                         // Change button text and add a message using SweetAlert
                                         Swal.fire({
@@ -385,14 +365,15 @@
                                             showConfirmButton: false,
                                             timer: 1500 // Close the alert after 1.5 seconds
                                         });
+
                                         updateCartCount();
                                     }
-
                                 </script>
 
-                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                <cript src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+                                    </script>
 
-                                <!-- Add other product details here as needed -->
+                                    <!-- Add other product details here as needed -->
                             </div>
                         </div>
                     </div>
@@ -400,8 +381,31 @@
 
 
             </div>
-            
+
         </section>
+
+        <section>
+            <div class="related-products-section" id="related-products-section">
+                <h2 class="flex align-items m-x-20 related-section-title">
+                    <span class="text">Related Products</span>
+                    <span class="related-line"></span>
+                </h2>
+
+                <div class="related-product-cards-container">
+                    <div class="related-products-container">
+
+                    </div>
+                </div>
+
+                <div class="dots-container">
+                    <!-- Dots will be dynamically generated here -->
+                </div>
+            </div>
+
+        </section>
+
+
+
 
 
 
@@ -411,32 +415,144 @@
             <img src="./assets/images/powerd by matager black.svg" width="100px">
         </a>
     </div>
-    
+
 </main>
-
-
-
-
-
-
-<!-- 
-    - #GO TO TOP
-  -->
-
 <a href="#top" class="go-top-btn" data-go-top="">
     <ion-icon name="arrow-up-outline" role="img" class="md hydrated" aria-label="arrow up outline"></ion-icon>
 </a>
-<!-- 
-    - custom js link
-  -->
-
-
-<!-- 
-    - ionicon link
-  -->
-
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule="" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the current page URL and encode it for sharing
+        const currentPageURL = encodeURIComponent(window.location.href);
+        const pageTitle = encodeURIComponent(document.title);
+
+        // Set up Facebook share link
+        document.getElementById('shareFacebook').addEventListener('click', function () {
+            const facebookURL = `https://www.facebook.com/dialog/share?app_id=61564248736614&href=${encodeURIComponent(currentPageURL)}&quote=${encodeURIComponent(pageTitle)}&display=popup`;
+            window.open(facebookURL, '_blank'); // Open the Facebook share dialog
+        });
+
+        // Set up WhatsApp share link
+        const whatsappShareURL = `https://wa.me/?text=${pageTitle}%20${currentPageURL}`;
+        document.getElementById('shareWhatsApp').href = whatsappShareURL;
+
+        // Instagram share handler (placeholder)
+        document.getElementById('shareInstagram').addEventListener('click', function () {
+            const instagramMessage = `${pageTitle} ${currentPageURL}`;
+            const instagramURL = `instagram://share?text=${encodeURIComponent(instagramMessage)}`;
+            window.open(instagramURL, '_blank');
+        });
+
+
+        // Copy URL to clipboard on "Share My Product" button click
+        document.getElementById('shareProductButton').addEventListener('click', function () {
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => {
+                    // Show confirmation message
+                    const messageDiv = document.getElementById('copyMessage');
+                    messageDiv.style.display = 'block';
+
+                    // Hide the confirmation message after 2 seconds
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy URL:', err);
+                });
+        });
+    });
+
+
+    // Function to check if elements are empty and toggle button state
+    function checkAndToggleButton(sizeId, colorId, buttonId) {
+        const sizeElement = document.getElementById(sizeId);
+        const colorElement = document.getElementById(colorId);
+        const buttonElement = document.getElementById(buttonId);
+        const carti = buttonElement.querySelector('i'); // Get the icon element
+
+        // Check if either size or color element is empty
+        if (!sizeElement.innerText.trim() || !colorElement.innerText.trim()) {
+            buttonElement.disabled = true; // Disable the button
+            buttonElement.style.opacity = '0.5'; // Set opacity to 0.5
+            carti.classList.remove('bi-bag-check');
+            carti.classList.add('bi-exclamation-lg');
+            buttonElement.removeAttribute('onclick'); // Remove onclick attribute if any
+        } else {
+            buttonElement.disabled = false; // Enable the button
+            buttonElement.style.opacity = '1'; // Set opacity to 1
+            carti.classList.remove('bi-exclamation-lg');
+            carti.classList.add('bi-bag-check');
+            buttonElement.setAttribute('onclick', 'addToCart()'); // Add onclick attribute
+        }
+    }
+
+    // Add event listeners for size and color selection
+    const sizeOptions = document.querySelectorAll(".size-radio");
+    const colorOptions = document.querySelectorAll(".color-option");
+
+    sizeOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+            const sizeElement = document.getElementById("product-Size");
+
+            // Reset background for all sizes
+            sizeOptions.forEach(opt => opt.style.backgroundColor = "");
+
+            // Set background for the selected size
+            option.style.backgroundColor = "#333"; // Change to your desired color
+            sizeElement.innerText = option.querySelector(".size-value").innerText;
+
+            // Automatically select the first color for the chosen size
+            const firstColorOption = colorOptions[0];
+            if (firstColorOption) {
+                colorOptions.forEach(opt => opt.style.border = "1px solid transparent"); // Reset borders
+                firstColorOption.style.border = "2px solid #333"; // Highlight first color
+                const colorElement = document.getElementById("product-color");
+                colorElement.innerText = firstColorOption.getAttribute("data-color-name");
+            }
+
+            // Check and toggle button state
+            checkAndToggleButton("product-Size", "product-color", "addToCartButton");
+        });
+    });
+
+    colorOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+            const colorElement = document.getElementById("product-color");
+
+            // Reset border for all colors
+            colorOptions.forEach(opt => opt.style.border = "1px solid transparent");
+
+            // Set border for selected color
+            option.style.border = "2px solid #333";
+            colorElement.innerText = option.getAttribute("data-color-name");
+
+            // Check and toggle button state
+            checkAndToggleButton("product-Size", "product-color", "addToCartButton");
+        });
+    });
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        checkAndToggleButton("product-Size", "product-color", "addToCartButton");
+
+        // Automatically select the first size and color
+        const firstSizeOption = sizeOptions[0];
+        const firstColorOption = colorOptions[0];
+
+        if (firstSizeOption) {
+            firstSizeOption.click(); // Simulate click on the first size
+        }
+
+        if (firstColorOption) {
+            firstColorOption.style.border = "2px solid #333"; // Highlight first color
+        }
+    });
+
+</script>
+
 <script>
     // Function to extract query parameters from URL
     function getParameterByName(name, url) {
@@ -454,6 +570,7 @@
 
 
 </script>
+
 <script>
 
 
@@ -488,15 +605,15 @@
 
                 // Populate product details
                 BrandNameElement.innerText = productDetails["Brand-Name"];
+                BrandNameElement.classList.add("pointer");
+                BrandNameElement.setAttribute(
+                    "onclick",
+                    `brand('${productDetails["Brand-Name"]}')`
+                );
+
+
                 productTitleElement.innerText = productDetails["product-title"];
                 productID.innerText = key;
-                // productImageElement.src = productDetails["product-photo"];
-                // productImage2Element.src = productDetails["product-photo2"];
-                // productImage3Element.src = productDetails["product-photo3"];
-                // productImage4Element.src = productDetails["product-photo4"];
-                // productImage5Element.src = productDetails["product-photo5"];
-                // productImage6Element.src = productDetails["product-photo6"];
-
                 const imageKeys = ["product-photo", "product-photo2", "product-photo3", "product-photo4", "product-photo5", "product-photo6"];
                 const imageElements = [productImageElement, productImage2Element, productImage3Element, productImage4Element, productImage5Element, productImage6Element];
 
@@ -506,7 +623,7 @@
 
                     if (imageUrl) {
                         imageElement.src = imageUrl;
-                      
+
                     } else {
                         imageElement.style.display = 'none';  // Hide the image if empty
                     }
@@ -533,6 +650,12 @@
                 prePriceElement.innerHTML = prePriceHTML;
                 productPriceElement.innerHTML = productPriceHTML;
 
+                // Get related products
+                const category = productDetails["category"];
+                const piece = productDetails["piece"];
+                const type = productDetails["type"];
+                fetchRelatedProducts(category, piece, type, key);
+
                 // Handling sizes and colors
                 const sizes = productDetails.sizes;
                 const sizeTabs = document.querySelector('.size-tabs');
@@ -546,7 +669,7 @@
                 for (const size in sizes) {
                     const sizeRadio = document.createElement('div');
                     sizeRadio.classList.add('size-radio');
-                    sizeRadio.setAttribute('onclick', 'SizeRef()');
+                    sizeRadio.setAttribute('onclick', 'SizeRef(this)');
 
                     const label = document.createElement('label');
                     label.classList.add('radio-input_option');
@@ -575,6 +698,7 @@
 
                             colorOption.style.backgroundColor = colors[color]["color-value"];
                             colorOption.setAttribute('data-color-name', color);
+                            colorOption.setAttribute('onclick', 'ColorRef(this)'); // Add the onclick attribute
                             colorOption.addEventListener('click', function (colorName) {
                                 var colorName = colorOption.getAttribute('data-color-name');
                                 // Call the updateProductImages function with the specified parameters
@@ -588,6 +712,28 @@
                             colorOption.addEventListener('click', function () {
                                 productColorElement.innerText = color;
                                 checkAndToggleButton("product-Size", "product-color", "addToCartButton");
+
+                                // Display stock quantity
+                                if (colorOptions) {
+                                    // Iterate over colors
+                                    const colors = sizes[size];
+                                    for (const color in colors) {
+                                        const qty = colors[color]["qty"];
+                                        const stockContainer = document.getElementById('stockContainer');
+                                        const stockMessage = document.getElementById('stockMessage');
+
+                                        if (stockContainer && stockMessage) {
+                                            if (qty <= 5) {
+                                                stockMessage.innerText = `Only ${qty} left in stock`;
+                                                stockContainer.classList.remove('hidden'); // Show the container
+                                            } else {
+                                                stockMessage.innerText = ''; // Clear the message
+                                                stockContainer.classList.add('hidden'); // Hide the container
+                                            }
+                                        }
+                                    }
+                                }
+
                             });
 
                             colorOptions.appendChild(colorOption);
@@ -603,6 +749,107 @@
                 console.error("Error fetching product details:", error);
             });
     }
+
+
+    function fetchRelatedProducts(category, piece, type, currentProductKey) {
+        fetch(`${url}/Stores/${uid}/Products.json`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((allProducts) => {
+                const relatedProductsContainer = document.querySelector('.related-products-container');
+                relatedProductsContainer.innerHTML = ''; // Clear existing related products
+
+                const relatedProducts = [];
+                for (const key in allProducts) {
+                    if (key !== currentProductKey) {
+                        const product = allProducts[key];
+                        // Check for matching category, piece, and type
+                        if (
+                            product.category === category &&
+                            product.piece === piece &&
+                            product.type === type
+                        ) {
+                            relatedProducts.push({ key, ...product });
+                        }
+                    }
+                }
+
+                // Sort products randomly and limit to 10
+                const maxProducts = 10;
+                const shuffledProducts = relatedProducts.sort(() => Math.random() - 0.5);
+                shuffledProducts.slice(0, maxProducts).forEach((product) => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('related-product-card');
+                    productCard.setAttribute('onclick', `productDetails('${product.key}')`);
+
+                    const productPrice = parseFloat(product["Product-Price"]);
+                    const saleAmount = parseFloat(product["sale-amount"]);
+                    const finalPrice = saleAmount > 0
+                        ? productPrice - (productPrice * (saleAmount / 100))
+                        : productPrice;
+
+                    // Extract and handle colors
+                    let colorOptionsHtml = "";
+                    let seenColors = new Set();
+                    let extraColorsCount = 0;
+
+                    if (product.sizes) {
+                        Object.keys(product.sizes).forEach((size) => {
+                            const sizeData = product.sizes[size];
+                            Object.keys(sizeData).forEach((color) => {
+                                const colorValue = sizeData[color]["color-value"];
+                                if (!seenColors.has(colorValue)) {
+                                    seenColors.add(colorValue);
+                                    if (seenColors.size <= 3) {
+                                        colorOptionsHtml += `
+                                        <div class="color-option2" 
+                                             style="background-color: ${colorValue};" 
+                                             data-color-name="${color}">
+                                        </div>`;
+                                    } else {
+                                        extraColorsCount++;
+                                    }
+                                }
+                            });
+                        });
+                    }
+
+                    // If there are extra colors, add the "more" circle
+                    if (extraColorsCount > 0) {
+                        colorOptionsHtml += `
+                        <div class="color-option2 flex center align-items font-small" 
+                             style="background-color: #e2e2e2;" 
+                             data-color-name="more">+${extraColorsCount}</div>`;
+                    }
+
+                    // Populate the product card HTML
+                    productCard.innerHTML = `
+                    <img class="related-product-image" 
+                        src="${product["product-photo"] || 'default-image-url.jpg'}" 
+                        alt="${product["product-title"]}">
+                        <div class="card-content">
+                        <div class="color-options m-5 mb-7 center">${colorOptionsHtml}</div>
+                    <h4 class="related-product-title">${product["product-title"]}</h4>
+                    <p class="related-product-price">${finalPrice} EGP</p>
+                    </div>
+                `;
+
+                    relatedProductsContainer.appendChild(productCard);
+                });
+
+                if (relatedProducts.length === 0) {
+                    relatedProductsContainer.innerHTML = '<p class="no-related-products">No related products found.</p>';
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching related products:", error);
+            });
+    }
+
 
     function calculateSalePrice(originalPrice, saleAmount) {
         return originalPrice - (originalPrice * (saleAmount / 100));
@@ -663,20 +910,13 @@
                 const productImage4Element = document.getElementById('productImage4');
                 const productImage5Element = document.getElementById('productImage5');
                 const productImage6Element = document.getElementById('productImage6');
-
-                // productImageElement.src = data.img1;
-                // productImage2Element.src = data.img2;
-                // productImage3Element.src = data.img3;
-                // productImage4Element.src = data.img4;
-                // productImage5Element.src = data.img5;
-                // productImage6Element.src = data.img6;
                 const images = [data.img1, data.img2, data.img3, data.img4, data.img5, data.img6];
                 const imageElements = [productImageElement, productImage2Element, productImage3Element, productImage4Element, productImage5Element, productImage6Element];
 
                 imageElements.forEach((element, index) => {
                     if (images[index]) {
                         element.src = images[index];
-                      
+
                     } else {
                         element.style.display = 'none';  // Hide image
                     }
@@ -690,75 +930,124 @@
             });
     }
 </script>
+
 <script>
-    const colorOptions = document.querySelectorAll('.color-option');
 
-    colorOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            colorOptions.forEach(otherOption => otherOption.classList.remove('selected'));
-            option.classList.add('selected');
-        });
-    });
+    document.addEventListener('DOMContentLoaded', function () {
 
-</script>
-<script>
-    // JavaScript to handle the click event on size radio buttons
-    var sizeRadios = document.querySelectorAll('.size-radio');
-    var productSizeLabel = document.getElementById('product-Size');
+        function SizeRef(selectedElement) {
+            // Get all the size-radio elements
+            const sizeElements = document.querySelectorAll('.size-radio');
 
-    sizeRadios.forEach(function (radio) {
-        radio.addEventListener('click', function () {
-            // Remove the 'active' class from all size radios
-            sizeRadios.forEach(function (radio) {
-                radio.classList.remove('active');
+            // Loop through each size and reset the background and text color
+            sizeElements.forEach(function (element) {
+                element.style.backgroundColor = ''; // Reset background color
+                element.style.color = ''; // Reset text color
             });
-            // Add the 'active' class to the clicked size radio
-            this.classList.add('active');
 
-            // Update the product size label with the chosen size
-            var sizeValue = this.querySelector('.size-value').innerText;
-            productSizeLabel.textContent = sizeValue;
-        });
-    });
-</script>
-<script>
-    // JavaScript to handle the click event on color options
-    var colorOption = document.querySelectorAll('.color-option');
-    var productColorLabel = document.getElementById('product-color');
+            // Set the background color and text color of the clicked element
+            selectedElement.style.backgroundColor = '#333';
+            selectedElement.style.color = 'white';
 
-    colorOption.forEach(function (option) {
-        option.addEventListener('click', function () {
-            // Update the product color label with the chosen color name
-            var colorName = this.getAttribute('data-color-name');
-            if (colorName) {
-                productColorLabel.textContent = colorName;
-            } else {
-                productColorLabel.textContent = "Color";
+            // Reset the text content of the color text element
+            const productColorElement = document.getElementById('product-color');
+            if (productColorElement) {
+                productColorElement.innerText = ''; // Set the content to be empty
             }
 
-            // Remove 'active' class from all color options
-            colorOptions.forEach(function (option) {
-                option.classList.remove('active');
+            // Show the hint text asking the user to select a color
+            const hintTextElement = document.getElementById('color-hint-text');
+            if (hintTextElement) {
+                // Set the full hint text immediately
+                hintTextElement.innerHTML = 'Must choose a color <i class="bi bi-arrow-down"></i>';
+
+                // Make the text visible and add animation class
+                hintTextElement.style.display = 'block';
+                hintTextElement.classList.add('rolling-animation');
+
+            }
+            checkSizeSelection();
+        }
+
+        function checkSizeSelection() {
+            const selectedSize = document.querySelector('.size-radio[style*="background-color: rgb(51, 51, 51)"]');
+            const sizeHintTextElement = document.getElementById('size-hint-text');
+
+            if (!selectedSize) {
+                // Show size hint if no size is selected
+                if (sizeHintTextElement) {
+                    sizeHintTextElement.innerHTML = 'Must choose a size <i class="bi bi-arrow-down"></i>';
+                    sizeHintTextElement.style.display = 'block';
+                    sizeHintTextElement.classList.add('rolling-animation');
+                }
+            } else {
+                // Hide size hint if a size is selected
+                if (sizeHintTextElement) {
+                    sizeHintTextElement.style.display = 'none';
+                    sizeHintTextElement.innerText = ''; // Clear the hint text
+                    sizeHintTextElement.classList.remove('rolling-animation');
+                }
+            }
+        }
+
+        function ColorRef(selectedElement) {
+            // Get all the color-option elements
+            const colorElements = document.querySelectorAll('.color-option');
+
+            // Loop through each color and reset the border
+            colorElements.forEach(function (element) {
+                element.style.border = ''; // Reset the border
             });
 
-            // Add 'active' class to the clicked color option
-            this.classList.add('active');
-        });
-    });
-    document.getElementById('showdetails').addEventListener('click', function () {
-        const detailsSection = document.getElementById('details-section');
-        const button = document.getElementById('showdetails');
+            // Set the border of the clicked color to 5px solid #c1c1c1
+            selectedElement.style.borderBottom = '5px solid #c1c1c1';
 
+            // Show or hide the color hint text
+            const hintTextElement = document.getElementById('color-hint-text');
+            if (hintTextElement) {
+                hintTextElement.style.display = 'none'; // Hide the hint text once a color is selected
+                hintTextElement.innerText = ''; // Clear the hint text
+                hintTextElement.classList.remove('rolling-animation');
+            }
+        }
+
+        // Call this function when the user needs a hint for color selection
+        function showColorHint() {
+            const hintTextElement = document.getElementById('color-hint-text');
+            if (hintTextElement) {
+                hintTextElement.innerHTML = 'Please select a color <i class="bi bi-arrow-down"></i>';
+                hintTextElement.style.display = 'block';
+                hintTextElement.classList.add('rolling-animation');
+            }
+        }
+
+        // Expose these functions to the global scope so they can be used in HTML onclick events
+        window.SizeRef = SizeRef;
+        window.ColorRef = ColorRef;
+        checkSizeSelection();
+    });
+    // Get references to the button and details section
+    const showDetailsButton = document.getElementById('showdetails');
+    const detailsSection = document.getElementById('details-section');
+
+    // Add a click event listener to the button
+    showDetailsButton.addEventListener('click', function () {
+        // Toggle the 'hidden' class on the details section
         if (detailsSection.classList.contains('hidden')) {
             detailsSection.classList.remove('hidden');
-            button.innerHTML = 'Hide Details <i class="bi bi-info"></i>';
+            showDetailsButton.innerHTML = 'Hide Details <i class="bi bi-info"></i>';
         } else {
             detailsSection.classList.add('hidden');
-            button.innerHTML = 'Show Details <i class="bi bi-info"></i>';
+            showDetailsButton.innerHTML = 'Show Details <i class="bi bi-info"></i>';
         }
     });
 
+
 </script>
+
+
+
+
 <script src="./assets/js/update-cart-amont.js"></script>
 <script src="./assets/js/route.js"></script>
 <script src="./assets/js/all.js"></script>

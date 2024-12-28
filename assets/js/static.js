@@ -2,6 +2,7 @@ const url = "https://matager-f1f00-default-rtdb.firebaseio.com";
 const storeurl = "https://matager-f1f00-default-rtdb.firebaseio.com";
 const storename = "Peacock";
 const uid = "R0jsmpHvS5U7RkRyd6Rj7YbSJvo1";
+const storeuid = "R0jsmpHvS5U7RkRyd6Rj7YbSJvo1";
 const storePhoneNum = "+20 122 838 3723";
 const storePhoneNum2 = "";
 const storeEmail = "Peacock.original.shop@gmail.com";

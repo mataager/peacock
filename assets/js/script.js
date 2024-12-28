@@ -70,7 +70,7 @@ function renderProducts() {
     });
 
     if (colorsArray.length > 3) {
-      colorOptionsHTML += `<div class="color-option2 flex center align-items font-small" style="background-color: #e2e2e2;" data-color-name="more">+${
+      colorOptionsHTML += `<div class="color-option2 flex center align-items font-small" onclick="productDetails('${key}')" style="background-color: #e2e2e2;" data-color-name="more">+${
         allColors.size - 3
       }</div>`;
     }
@@ -133,6 +133,12 @@ function renderProducts() {
                 <ion-icon name="eye-outline" role="img" class="md hydrated" aria-label="eye outline"></ion-icon>
               </button>
               <div class="card-action-tooltip" id="card-label-3">Quick View</div>
+            </li>
+            <li class="card-action-item" onclick="addfavouriteproduct('${key}')">
+              <button class="card-action-btn" aria-labelledby="card-label-3">
+                <ion-icon name="heart-outline" role="img" class="md hydrated" aria-label="heart-outline"></ion-icon>
+              </button>
+              <div class="card-action-tooltip" id="card-label-3">Add to Favourite</div>
             </li>
           </ul>
         </figure>
@@ -211,4 +217,3 @@ document.getElementById("prevPageBtn").addEventListener("click", () => {
 
 // Fetch and render products on page load
 fetchAndRenderProducts();
-

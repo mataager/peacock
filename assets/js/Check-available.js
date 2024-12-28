@@ -1,109 +1,125 @@
-async function checkAvailability() {
-  // Load the cart from local storage
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if (cart.length === 0) {
-    // console.log("Cart is empty.");
-    return;
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let totalAmount = 0;
 
-  try {
-    // Fetch product data from Firebase
-    const response = await fetch(`${url}/Stores/${uid}/Products.json`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product data from Firebase");
+  // Function to check availability from Firebase and adjust quantity if needed
+  async function checkAndAdjustCartItems() {
+    const adjustedItems = [];
+
+    for (const item of cart) {
+      const { id, productSize, productColor, quantity } = item;
+
+      const updatedQuantity = await new Promise((resolve) => {
+        checkAvailability(
+          id,
+          productSize,
+          productColor,
+          quantity,
+          (_, validQuantity) => resolve(validQuantity)
+        );
+      });
+
+      if (updatedQuantity < quantity) {
+        // If quantity is adjusted, update the cart item and add to adjustedItems
+        adjustedItems.push({
+          ...item,
+          adjustedQuantity: updatedQuantity,
+        });
+        item.quantity = updatedQuantity; // Adjust the quantity
+      }
     }
-    const productsData = await response.json();
 
-    // Initialize flag for out-of-stock items and items with insufficient quantity
-    let outOfStockItems = [];
-    let insufficientQuantityItems = [];
-
-    // Create a map to count the quantities of items in the cart
-    let cartQuantities = {};
-    cart.forEach((item) => {
-      const key = `${item.id}-${item.productSize}-${item.productColor}`;
-      cartQuantities[key] = (cartQuantities[key] || 0) + 1;
-    });
-
-    // Check each item in the cart
-    cart.forEach((cartItem, index) => {
-      let productAvailable = false;
-      let hasSufficientQuantity = false;
-
-      for (const key in productsData) {
-        const product = productsData[key];
-        if (
-          product["product-title"] === cartItem.title &&
-          product.sizes[cartItem.productSize] &&
-          product.sizes[cartItem.productSize][cartItem.productColor]
-        ) {
-          const productInfo =
-            product.sizes[cartItem.productSize][cartItem.productColor];
-          if (productInfo.qty > 0) {
-            productAvailable = true;
-            if (
-              cartQuantities[
-                `${cartItem.id}-${cartItem.productSize}-${cartItem.productColor}`
-              ] <= productInfo.qty
-            ) {
-              hasSufficientQuantity = true;
-            }
-          }
-        }
-      }
-
-      if (!productAvailable) {
-        // Add the out-of-stock item to the list
-        outOfStockItems.push(cartItem.title);
-        // Remove the item from the cart
-        cart.splice(index, 1);
-      } else if (!hasSufficientQuantity) {
-        // Add the item with insufficient quantity to the list
-        insufficientQuantityItems.push(cartItem.title);
-        // Reduce the quantity of this item in the cart to match the database quantity
-        cartQuantities[
-          `${cartItem.id}-${cartItem.productSize}-${cartItem.productColor}`
-        ]--;
-        cart.splice(index, 1);
-      }
-    });
-
-    // Update the cart in local storage
+    // Update local storage with the adjusted cart
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    // Show an alert if there were any out-of-stock or insufficient quantity items
-    if (outOfStockItems.length > 0 || insufficientQuantityItems.length > 0) {
-      let message = "";
-      if (outOfStockItems.length > 0) {
-        message += `The following items are out of stock and have been removed from your cart: ${outOfStockItems.join(
-          ", "
-        )}. `;
-      }
-      if (insufficientQuantityItems.length > 0) {
-        message += `The following items had insufficient quantities and have been adjusted in your cart: ${insufficientQuantityItems.join(
-          ", "
-        )}.`;
-      }
+    return adjustedItems;
+  }
+
+  // Function to check availability from Firebase database
+  function checkAvailability(
+    itemId,
+    productSize,
+    productColor,
+    requestedQuantity,
+    callback
+  ) {
+    fetch(`${url}/Stores/${uid}/Products/${itemId}.json`)
+      .then((response) => response.json())
+      .then((productsData) => {
+        if (
+          productsData &&
+          productsData.sizes &&
+          productsData.sizes[productSize] &&
+          productsData.sizes[productSize][productColor]
+        ) {
+          const availableQty = parseInt(
+            productsData.sizes[productSize][productColor].qty,
+            10
+          );
+          let validQuantity = requestedQuantity;
+
+          if (requestedQuantity > availableQty) {
+            validQuantity = availableQty; // Adjust to available stock
+          }
+
+          callback(true, validQuantity); // Call the callback with valid quantity
+        } else {
+          callback(false, 0); // Item not found or unavailable
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking availability:", error);
+        callback(false, 0); // Error
+      });
+  }
+
+  // Populate cart items and handle adjustments
+  async function populateCartItems() {
+    const adjustedItems = await checkAndAdjustCartItems();
+
+    // If there are adjustments, show them in Swal.fire
+    if (adjustedItems.length > 0) {
+      const adjustedHTML = adjustedItems
+        .map(
+          (item) => `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img 
+            src="${item["photourl"]}" 
+            style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" 
+          />
+          <span> your item has adjusted to its maximum stock amount which is : ${item.adjustedQuantity}</span>
+        </div>
+      `
+        )
+        .join("");
+
       Swal.fire({
         icon: "warning",
-        title: "Cart Update",
-        text: message,
+        title: "Adjusted Quantities",
+        html: adjustedHTML,
       }).then(() => {
-        location.reload();
+        // Reload the page after the user clicks "OK"
+        window.location.reload();
       });
-    } else {
-      // Swal.fire({
-      //   icon: "success",
-      //   title: "All items are available",
-      //   text: "All items in your cart are available.",
-      // });
     }
-  } catch (error) {
-    console.error("Error checking availability:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "There was an error checking the availability of the items. Please try again later.",
-    });
+
+    // Update total amount
+    updateTotalAmount();
   }
-}
+
+  // Function to update the total amount
+  function updateTotalAmount() {
+    totalAmount = cart.reduce(
+      (acc, item) =>
+        acc + parseFloat(item.price.replace(" EGP", "")) * item.quantity,
+      0
+    );
+    const totalAmountDiv = document.getElementById("total-cart-amount");
+    if (totalAmountDiv) {
+      totalAmountDiv.innerText = `Total : ${totalAmount.toFixed(2)} EGP`;
+    }
+  }
+
+  // Populate the cart items with adjustments
+  populateCartItems();
+});

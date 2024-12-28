@@ -51,59 +51,182 @@ function emailPasswordSignIn() {
   });
 }
 
-// Sign-Up Prompt
 function emailPasswordSignUp() {
   Swal.fire({
     title: "Create a New Account",
-    html: `
-      <input type="email" id="new-email" class="swal2-input" placeholder="Enter your email">
-      <input type="password" id="new-password" class="swal2-input" placeholder="Enter your password">
-      <input type="text" id="phone" class="swal2-input" placeholder="Enter your phone number (optional)">
-      <input type="text" id="profile-pic" class="swal2-input" placeholder="Enter your profile picture URL (optional)">
-    `,
+    html: `<input type="email" id="new-email" class="swal2-input width-available" placeholder="Enter your email">
+      <input type="text" id="first-name" class="swal2-input width-available" placeholder="Enter your first name">
+      <input type="text" id="last-name" class="swal2-input width-available" placeholder="Enter your last name">
+      <input type="password" id="new-password" class="swal2-input width-available" placeholder="Enter your password">
+      <input type="text" id="phone" class="swal2-input width-available" placeholder="Enter your primary phone number">
+      <input type="text" id="phone2" class="swal2-input width-available" placeholder="Enter your secondary phone number (optional)">
+      <input type="text" id="profile-pic" class="swal2-input width-available" placeholder="Enter your profile picture URL (optional)">
+      <select id="governorate" class="swal2-input select-governorate width-available">
+        <option value="" disabled selected>Select your governorate</option>
+        <option value="Cairo">Cairo</option>
+        <option value="Giza">Giza</option>
+        <option value="Alexandria">Alexandria</option>
+        <option value="Port Said">Port Said</option>
+        <option value="Suez">Suez</option>
+        <option value="Damietta">Damietta</option>
+        <option value="Dakahlia">Dakahlia</option>
+        <option value="Sharqia">Sharqia</option>
+        <option value="Qalyubia">Qalyubia</option>
+        <option value="Kafr El Sheikh">Kafr El Sheikh</option>
+        <option value="Gharbia">Gharbia</option>
+        <option value="Monufia">Monufia</option>
+        <option value="Beheira">Beheira</option>
+        <option value="Ismailia">Ismailia</option>
+        <option value="Aswan">Aswan</option>
+        <option value="Asyut">Asyut</option>
+        <option value="Beni Suef">Beni Suef</option>
+        <option value="Fayoum">Fayoum</option>
+        <option value="Minya">Minya</option>
+        <option value="Qena">Qena</option>
+        <option value="Sohag">Sohag</option>
+        <option value="Red Sea">Red Sea</option>
+        <option value="New Valley">New Valley</option>
+        <option value="Matruh">Matruh</option>
+        <option value="North Sinai">North Sinai</option>
+        <option value="South Sinai">South Sinai</option>
+        <option value="Luxor">Luxor</option>
+      </select>
+      <input type="text" id="city" class="swal2-input width-available" placeholder="Enter your city/state">
+      <input type="text" id="area" class="swal2-input width-available" placeholder="Enter your area">
+      <input type="text" id="house-number" class="swal2-input width-available" placeholder="Enter your house number">
+      <textarea id="address" class="swal2-textarea width-available" placeholder="Enter your full address"></textarea>
+    `, // The same HTML as before
     showCancelButton: true,
     confirmButtonText: "Sign Up",
     preConfirm: () => {
       const email = Swal.getPopup().querySelector("#new-email").value;
+      const firstName = Swal.getPopup().querySelector("#first-name").value;
+      const lastName = Swal.getPopup().querySelector("#last-name").value;
       const password = Swal.getPopup().querySelector("#new-password").value;
       const phone = Swal.getPopup().querySelector("#phone").value;
+      const phone2 = Swal.getPopup().querySelector("#phone2").value;
       const profilePic = Swal.getPopup().querySelector("#profile-pic").value;
+      const governorate = Swal.getPopup().querySelector("#governorate").value;
+      const city = Swal.getPopup().querySelector("#city").value;
+      const area = Swal.getPopup().querySelector("#area").value;
+      const houseNumber = Swal.getPopup().querySelector("#house-number").value;
+      const fullAddress = Swal.getPopup().querySelector("#address").value;
 
-      if (!email || !password) {
-        Swal.showValidationMessage("Please enter both email and password");
+      if (
+        !email ||
+        !password ||
+        !firstName ||
+        !lastName ||
+        !phone ||
+        !governorate ||
+        !city ||
+        !area ||
+        !houseNumber ||
+        !fullAddress
+      ) {
+        Swal.showValidationMessage("Please fill in all required fields.");
         return false;
       }
-      return { email, password, phone, profilePic };
+      return {
+        email,
+        password,
+        firstName,
+        lastName,
+        phone,
+        phone2,
+        profilePic,
+        governorate,
+        city,
+        area,
+        houseNumber,
+        fullAddress,
+      };
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      const { email, password, phone, profilePic } = result.value;
+      const {
+        email,
+        password,
+        firstName,
+        lastName,
+        phone,
+        phone2,
+        profilePic,
+        governorate,
+        city,
+        area,
+        houseNumber,
+        fullAddress,
+      } = result.value;
+
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Set additional user information
-          return userCredential.user
+          const user = userCredential.user;
+
+          // Update user profile with display name and photo
+          return user
             .updateProfile({
               displayName: "Customer",
-              photoURL: profilePic || undefined,
+              photoURL: profilePic || null,
             })
-            .then(() => {
-              // Save additional info (e.g., phone) in database if needed
-              const uid = userCredential.user.uid;
-              const userData = {
-                email,
-                displayName: "Customer",
-                phone: phone || null,
-                photoURL: profilePic || null,
-              };
-              // return firebase.database().ref(`users/${uid}`).set(userData);
-            });
+            .then(() => user.reload())
+            .then(() => user.getIdToken())
+            .then((idToken) => ({ user, idToken }));
         })
-        .then(() => {
+        .then(({ user, idToken }) => {
+          const uid = user.uid;
+
+          // Personal Info
+          const userData = {
+            personalInfo: {
+              email: user.email,
+              firstName,
+              lastName,
+              phone: phone,
+              phone2: phone2 || null,
+              photoURL: profilePic || null,
+            },
+            orders: [],
+            favorites: [],
+          };
+
+          // Address Data
+          const addressData = {
+            governorate,
+            city,
+            area,
+            houseNumber,
+            fullAddress,
+          };
+
+          // Save personal info and address data
+          return Promise.all([
+            fetch(
+              `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/personalInfo.json?auth=${idToken}`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData.personalInfo),
+              }
+            ),
+            fetch(
+              `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/address.json?auth=${idToken}`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(addressData),
+              }
+            ),
+          ]).then(() => user); // Return user object for UI update
+        })
+        .then((user) => {
+          // Update the UI once the data is saved
+          updateUI(user);
           Swal.fire({
             icon: "success",
-            title: "Account Created Successfully",
-            text: "Welcome! You can now signed in",
+            title: "Account Created and Signed In",
+            text: "Welcome! You are now signed in.",
           });
         })
         .catch((error) => {
