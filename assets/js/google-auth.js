@@ -80,7 +80,13 @@ document.getElementById("google-signin-btn").addEventListener("click", () => {
 document.getElementById("signout-btn").addEventListener("click", () => {
   auth.signOut().then(() => {
     console.log("User signed out");
-    Swal.fire("Logged out!", "You have been signed out.", "success");
+    Swal.fire({
+      title: "Logged out!",
+      text: "You have been signed out.",
+      icon: "success",
+    }).then(() => {
+      location.reload(); // Reload the page after clicking OK
+    });
     updateUI(null); // Hide signout button and user info
   });
 });
@@ -91,6 +97,8 @@ auth.onAuthStateChanged((user) => {
     // Hide the "Sign in" button if user is already authenticated
     document.getElementById("google-signin-btn").style.display = "none";
     document.getElementById("email-signin-btn").style.display = "none";
+    document.getElementById("sign-in-by-matager").classList.add("hidden");
+    document.getElementById("powerd-by-matager").classList.remove("end-page");
     document.getElementById("signout-btn").style.display = "block";
   } else {
     console.log("No user is signed in.");
@@ -167,7 +175,8 @@ async function updateUI(user) {
           document.getElementById("user-name").innerText = username;
           document.getElementById(
             "user-email"
-          ).innerHTML = `<i class="bi bi-envelope-fill mr-5"></i> ${email}`;
+          ).innerHTML = `<i class="fa-solid fa-envelope mr-5"></i> ${email}`;
+          document.getElementById("UID").innerText = user.uid;
           document.getElementById("email-address").innerText = email;
           document.getElementById("first-name").innerText = firstName;
           document.getElementById("last-name").innerText = lastName;
@@ -442,61 +451,183 @@ function triggerFileInput() {
   document.getElementById("file-input").click();
 }
 
-// Handle the image file selection
+// Imgur Client ID
+const IMGUR_CLIENT_ID = "e855dfc7fb0d876";
+let selectedFile = null; // Declare a variable to hold the selected file
+
+// Function to upload image to Imgur
+async function uploadImageToImgur(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const response = await fetch("https://api.imgur.com/3/image", {
+      method: "POST",
+      headers: {
+        Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Imgur upload failed: ${errorData.data.error}`);
+    }
+
+    const data = await response.json();
+    return data.data.link; // URL of the uploaded image
+  } catch (error) {
+    console.error("Upload failed:", error);
+    throw new Error("Failed to upload image: " + error.message);
+  }
+}
+
+// Handle the image file selection and preview it
 function updateProfilePicture(event) {
   const file = event.target.files[0];
   if (file) {
+    selectedFile = file; // Store the file in the global variable
+
     const objectURL = URL.createObjectURL(file);
     const profileImage = document.getElementById("user-photo");
+    const saveChangesButton = document.getElementById("savechanges");
+
+    // Temporarily display the selected image
     profileImage.src = objectURL;
     profileImage.style.objectFit = "cover";
-    closeModal();
+
+    // Show the Save Changes button
+    saveChangesButton.classList.remove("hidden");
   }
 }
 
-// Handle taking a photo
-function takePhoto() {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    const video = document.createElement("video");
-    const canvas = document.createElement("canvas");
-    const profileImage = document.getElementById("user-photo");
+// Save changes and upload the image to Imgur
 
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then((stream) => {
-        video.srcObject = stream;
-        video.play();
+async function saveProfilePicture() {
+  const saveChangesButton = document.getElementById("savechanges");
+  const preloader = document.getElementById("save-btn-preloader");
+  const profileImage = document.getElementById("user-photo");
 
-        // Show the video preview in place of the image
-        document.body.appendChild(video);
+  if (selectedFile) {
+    try {
+      // Show the preloader and disable the button
+      preloader.classList.remove("hidden");
+      saveChangesButton.disabled = true;
 
-        setTimeout(() => {
-          // Take a snapshot after 3 seconds
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          canvas.getContext("2d").drawImage(video, 0, 0);
+      // Show a loading indicator (optional)
+      saveChangesButton.textContent = "Uploading...";
 
-          // Replace the profile image with the snapshot
-          profileImage.src = canvas.toDataURL("image/png");
-          profileImage.style.objectFit = "cover";
+      // Upload the image to Imgur
+      const uploadedImageUrl = await uploadImageToImgur(selectedFile);
 
-          // Stop the video stream
-          stream.getTracks().forEach((track) => track.stop());
-          document.body.removeChild(video);
+      // Update the profile image with the final URL
+      profileImage.src = uploadedImageUrl;
 
-          closeModal();
-        }, 3000);
-      })
-      .catch((error) => {
-        alert("Unable to access the camera. Please check your permissions.");
-        console.error(error);
+      // Reset the button and state
+      saveChangesButton.textContent = "Save Changes";
+      saveChangesButton.disabled = false;
+
+      // Hide the preloader and the Save Changes button after upload
+      preloader.classList.add("hidden");
+      saveChangesButton.classList.add("hidden");
+
+      console.log("Image uploaded successfully:", uploadedImageUrl);
+
+      // Show SweetAlert success message and auto-close after 2 seconds
+      Swal.fire({
+        title: "Image uploaded successfully!",
+        icon: "success",
+        timer: 2000, // 2 seconds
+        showConfirmButton: false, // Hide the confirm button
+        willClose: () => {
+          // Optional: You can reset the button here or perform other actions after the alert closes
+        },
       });
+    } catch (error) {
+      console.error(error);
+      alert("Failed to upload image. Please try again.");
+      saveChangesButton.textContent = "Save Changes";
+      saveChangesButton.disabled = false;
+
+      // Hide the preloader and show the button again
+      preloader.classList.add("hidden");
+      saveChangesButton.classList.remove("hidden");
+    }
   } else {
-    alert("Camera access is not supported by your browser.");
+    alert("No image selected to save.");
   }
 }
 
-// Show the input for the image URL inside the modal
+// Add event listener for the save changes button
+document
+  .getElementById("savechanges")
+  .addEventListener("click", saveProfilePicture);
+
+// Add event listener for the image file input
+document
+  .getElementById("profile-picture-input") // Assuming the input element has this ID
+  .addEventListener("change", updateProfilePicture);
+
+// Update the profile picture using the image URL
+function updateProfilePictureFromURL(event) {
+  const imageURL = event.target.value;
+  const userPhoto = document.getElementById("user-photo");
+  const inputField = document.getElementById("image-url-input");
+  const uploadimgurlbtn = document.getElementById("upload-img-url");
+  const imageError = document.getElementById("image-error");
+  const saveChangesButton = document.getElementById("savechanges");
+
+  if (imageURL) {
+    // Temporarily set the image source to test if it's valid
+    userPhoto.src = imageURL;
+
+    // Reset any previous error state
+    userPhoto.onerror = null;
+    userPhoto.onload = null;
+
+    // Add an error listener to handle invalid image URLs
+    userPhoto.onerror = () => {
+      // Reset the error listener immediately to avoid infinite triggers
+      userPhoto.onerror = null;
+
+      // Show error message
+      imageError.textContent =
+        "The image has a problem. Please check the URL and try again.";
+      imageError.classList.remove("hidden");
+
+      // Reset fields
+      userPhoto.src = "";
+      inputField.value = "";
+      uploadimgurlbtn.style.display = "none";
+      saveChangesButton.classList.add("hidden");
+    };
+
+    // Handle successful image loading
+    userPhoto.onload = () => {
+      // Remove error listener
+      userPhoto.onerror = null;
+
+      // Hide error message
+      imageError.textContent = "";
+      imageError.classList.add("hidden");
+
+      // Show save changes button
+      saveChangesButton.classList.remove("hidden");
+      saveChangesButton.style.display = "block";
+
+      // Close the modal
+      closeModal();
+    };
+  } else {
+    // If the input is empty, reset everything
+    userPhoto.src = "";
+    uploadimgurlbtn.style.display = "none";
+    saveChangesButton.classList.add("hidden");
+    imageError.textContent = "";
+    imageError.classList.add("hidden");
+  }
+}
+
 function showImageURLInput() {
   const urlInputContainer = document.getElementById("url-input-container");
   // Toggle visibility
@@ -506,14 +637,17 @@ function showImageURLInput() {
     urlInputContainer.style.display = "block"; // Show if hidden
   }
 }
+// Button visibility logic
+const inputField = document.getElementById("image-url-input");
+const uploadimgurlbtn = document.getElementById("upload-img-url");
 
-// Update the profile picture using the image URL
-function updateProfilePictureFromURL(event) {
-  const imageURL = event.target.value;
-  if (imageURL) {
-    document.getElementById("user-photo").src = imageURL;
+inputField.addEventListener("input", () => {
+  if (inputField.value.trim() !== "") {
+    uploadimgurlbtn.style.display = "inline-block"; // Show button
+  } else {
+    uploadimgurlbtn.style.display = "none"; // Hide button
   }
-}
+});
 
 //
 

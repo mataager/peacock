@@ -33,6 +33,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="./assets/js/static.js"></script>
     <script src="./assets/js/search-product.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -188,7 +189,7 @@
             </div>
         </div>
 
-        <div class="mt-20">
+        <div class="mt-20 hidden">
             <button id="google-signin-btn">
                 <div class="flex align-items google-signin-btn p-10">
                     <i class="sign-txt bi bi-google mr-5"></i>
@@ -198,31 +199,48 @@
                 </div>
             </button>
         </div>
-        <div class="mt-20">
-            <button id="email-signin-btn" onclick="emailPasswordSignIn()">
-                <div class="flex align-items google-signin-btn p-10">
-                    <i class="sign-txt bi bi-envelope-fill mr-5"></i>
-                    <div class="sign-txt">
-                        sign in with email & password
+        <div id="sign-in-by-matager" class="mt-20 flex align-items flex-direction-column text-center gap-10">
+            <img width="50px" src="./assets/images/matager-bag.svg">
+            <h3>Sign in with Your Matager Account</h3>
+            <p class="flex">
+                Want to know the advantages of a <a href="https://matager.online/docs" target="_blank"
+                    class="link m-x-3">Matager
+                    account</a>?
+            </p>
+            <div>
+                <button id="email-signin-btn" onclick="emailPasswordSignIn()">
+                    <div class="flex align-items google-signin-btn p-10">
+                        <div class="sign-txt mr-5">
+                            sign in
+                        </div>
+                        <i class="fa-solid fa-right-to-bracket sign-txt"></i>
                     </div>
-                </div>
-            </button>
+                </button>
+            </div>
         </div>
+
+
 
 
         <div id="user-info" style="display: none;" class="user-dashboard">
             <div class="user-header">
+                <div class="flex align-items">
+                    <button id="savechanges" class="save-changes-btn hidden" title="save changes">
+                        save changes
+                    </button>
+                    <div id="save-btn-preloader" class="save-btn-preloader hidden"></div>
+                </div>
+
                 <div class="user-info flex">
                     <img class="user-pp" id="user-photo" src="" alt="https://i.imgur.com/Zaneuop.png"
                         onclick="openImageOptions()">
                     <div class="user-details">
                         <h4 id="user-name"></h4>
                         <p class="flex" id="user-email"></p>
-                        <!-- <p id="user-phone"></p> -->
                     </div>
                 </div>
-                <button class="logout-btn" title="Logout">
-                    <i class="sign-txt bi bi-box-arrow-right"></i>
+                <button class="logout-btn" title="Logout" id="signout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
 
                 <div id="image-options-modal" class="modal" onclick="closeModalOnOutsideClick(event)">
@@ -232,24 +250,33 @@
                             onclick="closeModal()">
                             <i class="bi bi-x"></i>
                         </button>
-                        <!-- <span class="close-btn" >&times;</span>
-                        <h5 class="black-font w-max ">Choose an option to upload your profile photo:</h5> -->
                         <button class="pp-option-btn w-max" onclick="triggerFileInput()">Upload from Gallery <i
                                 class="bi bi-cloud-upload m-x-3"></i></button>
-                        <button class="pp-option-btn w-max" onclick="takePhoto()">Take a Photo <i
-                                class="bi bi-camera m-x-3"></i></button>
-                        <button class="pp-option-btn w-max" onclick="showImageURLInput()">Use Image URL <i
-                                class="bi bi-link-45deg m-x-3"></i></button>
+                        <div class="flex"> <button class="pp-option-btn w-max" onclick="showImageURLInput()">Use Image
+                                URL <i class="bi bi-link-45deg m-x-3"></i></button>
+                            <button class="pp-option-btn w-max" id="upload-img-url"
+                                onclick="updateProfilePictureFromURL(event)" style="display: none;margin: 10px 0px;"><i
+                                    class="bi bi-cloud-upload"></i></button>
+                        </div>
 
-                        <!-- Input for Image URL -->
+
+
                         <div id="url-input-container" style="display: none;">
                             <input type="text" class="photo-pic-url" id="image-url-input" placeholder="Enter Image URL"
                                 onchange="updateProfilePictureFromURL(event)" />
                         </div>
+
+                        <div class="flex center">
+                            <p id="image-error" class="hidden font-error"></p>
+                        </div>
                     </div>
-                    <!-- File Input for Image Upload -->
+
                     <input type="file" id="file-input" style="display: none;" onchange="updateProfilePicture(event)"
                         accept="image/*" />
+                    <!-- Assuming this is the input for file selection -->
+                    <input type="file" id="profile-picture-input" style="display: none;"
+                        onchange="updateProfilePicture(event)" accept="image/*" />
+
                 </div>
 
             </div>
@@ -281,6 +308,12 @@
                                 onclick="savepersonalinfochanges()">
                                 save changes</button>
 
+                        </div>
+                    </div>
+                    <div class="details-row">
+                        <div class="detail-group">
+                            <h6>UID</h6>
+                            <p id="UID"></p>
                         </div>
                     </div>
                     <div class="details-row">
@@ -420,20 +453,11 @@
 
 
 
-        <div class="mt-20">
-            <button id="signout-btn">
-                <div class="flex align-items signout-btn p-10">
-                    <i class="sign-txt bi bi-box-arrow-right mr-5"></i>
-                    <div class="sign-txt">
-                        Sign out
-                    </div>
-                </div>
-            </button>
-        </div>
+
 
 
     </div>
-    <div class="flex center">
+    <div class="flex center end-page" id="powerd-by-matager">
         <a href="https://matager.online" target="_blank">
             <img src="./assets/images/powerd by matager black.svg" width="100px">
         </a>
