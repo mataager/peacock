@@ -554,7 +554,6 @@ async function saveProfilePicture() {
       saveChangesButton.classList.remove("hidden");
     }
   } else {
-    alert("No image selected to save.");
   }
 }
 
@@ -649,8 +648,174 @@ inputField.addEventListener("input", () => {
   }
 });
 
+function showAvatars() {
+  const avatarContainer = document.getElementById("avatarContainer");
+  const avatarCarousel = document.getElementById("avatarCarousel");
+
+  // Unhide the avatar container
+  avatarContainer.classList.remove("hidden");
+
+  // Sample avatar images (replace with your image URLs)
+  const avatars = [
+    "https://i.imgur.com/EefGAr3.jpeg",
+    "https://i.imgur.com/w7hc8vE.jpeg",
+    "https://i.imgur.com/hCcCj6u.jpeg",
+    "https://i.imgur.com/AFiowRw.jpeg",
+    "https://i.imgur.com/1YOLQ5r.jpeg",
+    "https://i.imgur.com/tRl4D55.jpeg",
+    "https://i.imgur.com/sOEhCqO.jpeg",
+    "https://i.imgur.com/zyl46kR.jpeg",
+    "https://i.imgur.com/uesShn7.jpeg",
+    "https://i.imgur.com/psAxQsV.jpeg",
+    "https://i.imgur.com/to8D1li.jpeg",
+    "https://i.imgur.com/YMuYZoc.jpeg",
+    "https://i.imgur.com/FdnaU6t.jpeg",
+    "https://i.imgur.com/BnSzooT.jpeg",
+    "https://i.imgur.com/sjWGonu.jpeg",
+    "https://i.imgur.com/OcxRKDm.jpeg",
+    "https://i.imgur.com/0U8t7jQ.jpeg",
+  ];
+
+  // Populate the carousel with avatars
+  avatarCarousel.innerHTML = avatars
+    .map(
+      (url, index) =>
+        `<img src="${url}" alt="Avatar ${
+          index + 1
+        }" onclick="selectAvatar(this)">`
+    )
+    .join("");
+}
+
+function selectAvatar(selectedImg) {
+  // Remove 'selected' class from previously selected avatars
+  document
+    .querySelectorAll(".avatar-carousel img")
+    .forEach((img) => img.classList.remove("selected"));
+
+  // Add 'selected' class to the clicked avatar
+  selectedImg.classList.add("selected");
+
+  // Show the confirm button
+  document.getElementById("selectAvatarButton").classList.remove("hidden");
+}
+
+// function confirmAvatar() {
+//   const selectedAvatar = document.querySelector(
+//     ".avatar-carousel img.selected"
+//   );
+
+//   const userPhoto = document.getElementById("user-photo");
+//   const savechangesbtn = document.getElementById("savechanges");
+//   userPhoto.src = selectedAvatar.src;
+//   savechangesbtn.classList.remove("hidden");
+//   savechangesbtn.setAttribute("avatarurl", selectedAvatar.src);
+//   closeModal();
+// }
+
 //
 
+function confirmAvatar() {
+  const selectedAvatar = document.querySelector(
+    ".avatar-carousel img.selected"
+  );
+
+  const userPhoto = document.getElementById("user-photo");
+  const saveChangesBtn = document.getElementById("savechanges");
+
+  if (!selectedAvatar) {
+    alert("Please select an avatar.");
+    return;
+  }
+
+  userPhoto.src = selectedAvatar.src;
+  saveChangesBtn.classList.remove("hidden");
+  saveChangesBtn.setAttribute("avatarurl", selectedAvatar.src);
+
+  // Set the uploadAvatar function as the click handler
+  saveChangesBtn.onclick = function () {
+    uploadAvatar(selectedAvatar.src);
+  };
+
+  closeModal();
+}
+
+async function uploadAvatar(avatarUrl) {
+  try {
+    if (!avatarUrl) {
+      throw new Error("No avatar URL found. Please select an avatar.");
+    }
+
+    // Get the user's auth token and UID
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      throw new Error("User not authenticated.");
+    }
+
+    const idToken = await user.getIdToken();
+    const uid = user.uid;
+
+    // Firebase Realtime Database URL for personal info
+    const personalInfoUrl = `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/personalInfo.json?auth=${idToken}`;
+
+    // Fetch the user's personal information
+    const response = await fetch(personalInfoUrl);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch personal information. Status: ${response.status}`
+      );
+    }
+
+    const personalInfo = await response.json();
+
+    if (!personalInfo) {
+      throw new Error("Personal information not found.");
+    }
+
+    // Assuming the user data is stored as individual records,
+    // update the 'photoURL' of the user by targeting the user ID
+    const userdataId = Object.keys(personalInfo)[0]; // Get the user ID, assuming it's the first key
+    const updatedPersonalInfo = {
+      ...personalInfo[userdataId], // Copy existing user info
+      photoURL: avatarUrl, // Update only the photoURL field
+    };
+
+    // Now, update the user's photoURL in the personalInfo
+    const updateResponse = await fetch(
+      `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/personalInfo/${userdataId}.json?auth=${idToken}`,
+      {
+        method: "PUT", // Use PUT to overwrite the specific user's personal info
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPersonalInfo),
+      }
+    );
+
+    if (!updateResponse.ok) {
+      throw new Error(
+        `Failed to update photoURL. Status: ${updateResponse.status}`
+      );
+    }
+
+    // Display SweetAlert success message and auto-close after a few seconds
+    Swal.fire({
+      icon: "success",
+      title: "Avatar uploaded successfully!",
+      showConfirmButton: false,
+      timer: 1500, // Close after 1.5 seconds
+    });
+  } catch (error) {
+    console.error("Error in uploadAvatar:", error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.message,
+    });
+  }
+}
+
+//
 async function printinvoice(orderId, userId, userToken) {
   try {
     // Construct the API URL with userId and userToken

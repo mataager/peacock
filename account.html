@@ -252,6 +252,21 @@
                         </button>
                         <button class="pp-option-btn w-max" onclick="triggerFileInput()">Upload from Gallery <i
                                 class="bi bi-cloud-upload m-x-3"></i></button>
+                        <div class="flex flex-direction-column align-items">
+                            <button class="pp-option-btn w-max" onclick="showAvatars()">Use Avatar<i
+                                    class="fa-solid fa-user-astronaut m-x-3"></i></button>
+                            <div id="avatarContainer" class="hidden">
+                                <div id="avatarCarousel" class="avatar-carousel">
+                                    <!-- Avatar images will be dynamically loaded here -->
+                                </div>
+
+                            </div>
+                            <button id="selectAvatarButton" class="pp-option-btn w-max hidden"
+                                onclick="confirmAvatar()">Confirm
+                                Selection</button>
+                        </div>
+
+
                         <div class="flex"> <button class="pp-option-btn w-max" onclick="showImageURLInput()">Use Image
                                 URL <i class="bi bi-link-45deg m-x-3"></i></button>
                             <button class="pp-option-btn w-max" id="upload-img-url"

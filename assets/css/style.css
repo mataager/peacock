@@ -4724,3 +4724,54 @@ th {
   display: inline-block;
 
 }
+
+.avatar-carousel {
+  width: 200px;
+  /* Fixed width */
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+/* Custom scrollbar for WebKit browsers */
+.avatar-carousel::-webkit-scrollbar {
+  height: 1.25px;
+  /* Thin height */
+}
+
+
+
+.avatar-carousel img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s, border 0.3s;
+}
+
+.avatar-carousel img:hover {
+  transform: scale(1.02);
+}
+
+.avatar-carousel img.selected {
+  border: 1px solid #007bff;
+  padding: 3px;
+}
+
+#selectAvatarButton {
+  margin-top: 10px;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 5px 10px;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#selectAvatarButton:hover {
+  color: rgb(0, 0, 0);
+  background: transparent;
+  border: 2px solid rgb(0, 0, 0);
+}
