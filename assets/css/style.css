@@ -1943,6 +1943,10 @@ a.footer-link:is(:hover, :focus) {
   padding-bottom: 7px;
 }
 
+.p-5-10 {
+  padding: 5px 10px !important;
+}
+
 .center {
   justify-content: center;
 }
@@ -2211,6 +2215,10 @@ select {
 
 .align-items {
   align-items: center;
+}
+
+.align-txt {
+  text-align: center;
 }
 
 .align-items-flex-end {

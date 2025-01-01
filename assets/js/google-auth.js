@@ -648,6 +648,7 @@ inputField.addEventListener("input", () => {
   }
 });
 
+// avatar profile upload
 function showAvatars() {
   const avatarContainer = document.getElementById("avatarContainer");
   const avatarCarousel = document.getElementById("avatarCarousel");
@@ -700,21 +701,6 @@ function selectAvatar(selectedImg) {
   document.getElementById("selectAvatarButton").classList.remove("hidden");
 }
 
-// function confirmAvatar() {
-//   const selectedAvatar = document.querySelector(
-//     ".avatar-carousel img.selected"
-//   );
-
-//   const userPhoto = document.getElementById("user-photo");
-//   const savechangesbtn = document.getElementById("savechanges");
-//   userPhoto.src = selectedAvatar.src;
-//   savechangesbtn.classList.remove("hidden");
-//   savechangesbtn.setAttribute("avatarurl", selectedAvatar.src);
-//   closeModal();
-// }
-
-//
-
 function confirmAvatar() {
   const selectedAvatar = document.querySelector(
     ".avatar-carousel img.selected"
@@ -739,12 +725,19 @@ function confirmAvatar() {
 
   closeModal();
 }
-
 async function uploadAvatar(avatarUrl) {
+  const preloader = document.getElementById("save-btn-preloader");
+  const saveChangesButton = document.getElementById("savechanges");
+
   try {
     if (!avatarUrl) {
       throw new Error("No avatar URL found. Please select an avatar.");
     }
+
+    // Show the preloader and disable the button
+    preloader.classList.remove("hidden");
+    saveChangesButton.disabled = true;
+    saveChangesButton.textContent = "Uploading...";
 
     // Get the user's auth token and UID
     const user = firebase.auth().currentUser;
@@ -812,8 +805,90 @@ async function uploadAvatar(avatarUrl) {
       title: "Oops...",
       text: error.message,
     });
+  } finally {
+    // Hide the preloader and reset the button state
+    preloader.classList.add("hidden");
+    saveChangesButton.disabled = false;
+    saveChangesButton.textContent = "Save Changes";
+    saveChangesButton.classList.add("hidden");
   }
 }
+
+// async function uploadAvatar(avatarUrl) {
+//   const preloader = document.getElementById("save-btn-preloader");
+//   try {
+//     if (!avatarUrl) {
+//       throw new Error("No avatar URL found. Please select an avatar.");
+//     }
+
+//     // Get the user's auth token and UID
+//     const user = firebase.auth().currentUser;
+//     if (!user) {
+//       throw new Error("User not authenticated.");
+//     }
+
+//     const idToken = await user.getIdToken();
+//     const uid = user.uid;
+
+//     // Firebase Realtime Database URL for personal info
+//     const personalInfoUrl = `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/personalInfo.json?auth=${idToken}`;
+
+//     // Fetch the user's personal information
+//     const response = await fetch(personalInfoUrl);
+//     if (!response.ok) {
+//       throw new Error(
+//         `Failed to fetch personal information. Status: ${response.status}`
+//       );
+//     }
+
+//     const personalInfo = await response.json();
+
+//     if (!personalInfo) {
+//       throw new Error("Personal information not found.");
+//     }
+
+//     // Assuming the user data is stored as individual records,
+//     // update the 'photoURL' of the user by targeting the user ID
+//     const userdataId = Object.keys(personalInfo)[0]; // Get the user ID, assuming it's the first key
+//     const updatedPersonalInfo = {
+//       ...personalInfo[userdataId], // Copy existing user info
+//       photoURL: avatarUrl, // Update only the photoURL field
+//     };
+
+//     // Now, update the user's photoURL in the personalInfo
+//     const updateResponse = await fetch(
+//       `https://matager-f1f00-default-rtdb.firebaseio.com/users/${uid}/personalInfo/${userdataId}.json?auth=${idToken}`,
+//       {
+//         method: "PUT", // Use PUT to overwrite the specific user's personal info
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(updatedPersonalInfo),
+//       }
+//     );
+
+//     if (!updateResponse.ok) {
+//       throw new Error(
+//         `Failed to update photoURL. Status: ${updateResponse.status}`
+//       );
+//     }
+
+//     // Display SweetAlert success message and auto-close after a few seconds
+//     Swal.fire({
+//       icon: "success",
+//       title: "Avatar uploaded successfully!",
+//       showConfirmButton: false,
+//       timer: 1500, // Close after 1.5 seconds
+//     });
+//   } catch (error) {
+//     console.error("Error in uploadAvatar:", error.message);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Oops...",
+//       text: error.message,
+//     });
+//   }
+// }
 
 //
 async function printinvoice(orderId, userId, userToken) {
