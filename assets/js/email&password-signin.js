@@ -1,11 +1,12 @@
 // Email and Password Sign-In or Sign-Up Prompt
 function emailPasswordSignIn() {
   Swal.fire({
-    title: "Sign in with Email & Password",
+    title:
+      '<div class="flex center mb-10"><img width="30px" src="./assets/images/matager-bag.svg" alt="Matager Logo"></div> Sign in with Matager',
     html: `
       <input type="email" id="email" class="swal2-input" placeholder="Enter your email">
       <input type="password" id="password" class="swal2-input" placeholder="Enter your password">
-      <p style="margin-top: 10px;">Don't have an account? <a href="#" id="signup-link">Sign up here</a></p>
+      <p style="margin-top: 10px;">Don't have an account? <a href="#" id="signup-link" class=" mt-10">Sign up here</a></p>
     `,
     showCancelButton: true,
     confirmButtonText: "Sign In",
@@ -53,7 +54,8 @@ function emailPasswordSignIn() {
 
 function emailPasswordSignUp() {
   Swal.fire({
-    title: "Create a New Account",
+    title:
+      '<div class="flex center mb-10"><img width="30px" src="./assets/images/matager-bag.svg" alt="Matager Logo"></div> Create a New Matager Account',
     html: `<input type="email" id="new-email" class="swal2-input width-available" placeholder="Enter your email">
       <input type="text" id="first-name" class="swal2-input width-available" placeholder="Enter your first name">
       <input type="text" id="last-name" class="swal2-input width-available" placeholder="Enter your last name">

@@ -1700,6 +1700,10 @@ a.footer-link:is(:hover, :focus) {
   font-size: small !important;
 }
 
+.font-medium {
+  font-size: medium !important;
+}
+
 .font-smaller {
   font-size: smaller !important;
 }
@@ -4782,4 +4786,17 @@ th {
   color: rgb(0, 0, 0);
   background: transparent;
   border: 2px solid rgb(0, 0, 0);
+}
+
+.best-seller {
+  font-size: small;
+  color: white;
+  bottom: 0;
+  z-index: 100000;
+  position: absolute;
+  background: black;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }

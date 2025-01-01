@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   const filterBtn = document.getElementById("filterBtn");
   const sidebar = document.getElementById("sidebar");
