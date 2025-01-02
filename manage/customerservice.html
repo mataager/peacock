@@ -49,7 +49,7 @@
         <div class="formbold-form-wrapper">
             <div class="mb-20 flex align-items space-between">
 
-                <div class="profile-icon " onclick="toggleDropdown()">
+                <div class="profile-icon profile-icon-img" onclick="toggleDropdown()">
                     <!-- <span><i class="bi bi-diagram-3"></i></span> -->
                     <div id="dropdown" class="dropdown-menu">
                         <a href="./main.html" class="center align-items"><i class="bi bi-house-door mr-5"></i> Home
@@ -293,7 +293,7 @@
 
                                         addEventListeners(); // Add event listeners to buttons
                                     } else {
-                                        tableBody.innerHTML = "<tr><td colspan='4' class='center'>No reports found.</td></tr>";
+                                        tableBody.innerHTML = "<div class='text-center p-100'>No reports found</div>";
                                     }
                                 })
                                 .catch((error) => {

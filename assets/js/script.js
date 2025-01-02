@@ -1,7 +1,7 @@
 "use strict";
 
 let currentPage = 1;
-const itemsPerPage = 10;
+const itemsPerPage = 100;
 let totalProducts = 0;
 let allProducts = [];
 let allData = {};

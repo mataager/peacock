@@ -5,6 +5,18 @@ async function searchProduct() {
   const editdiv = document.getElementById("edititem-details");
   const productId = document.getElementById("product-id-input").value.trim();
 
+  document
+    .getElementById("BestsellerSwitcher")
+    .addEventListener("change", function () {
+      if (this.checked) {
+        this.setAttribute("bestseller", "true");
+        console.log("Best seller attribute set to true");
+      } else {
+        this.setAttribute("bestseller", "false");
+        console.log("Best seller attribute set to false");
+      }
+    });
+
   // Show the spinner
   spinner.classList.remove("hidden");
   searchicon.classList.add("hidden");
@@ -75,6 +87,16 @@ async function searchProduct() {
     document.getElementById("mainimg6").src =
       data["product-photo6"] ||
       "https://i.imgur.com/Ob91UIr_d.webp?maxwidth=760&fidelity=grand";
+
+    // Set Bestseller Switcher
+    const bestsellerSwitcher = document.getElementById("BestsellerSwitcher");
+    if (data["bestseller"] === true) {
+      bestsellerSwitcher.checked = true;
+      bestsellerSwitcher.setAttribute("bestseller", "true");
+    } else {
+      bestsellerSwitcher.checked = false;
+      bestsellerSwitcher.setAttribute("bestseller", "false");
+    }
 
     const categorySelect = document.getElementById("category-2");
     const pieceSelect = document.getElementById("Piece-2");
@@ -284,6 +306,13 @@ async function patchProduct() {
       "product-description": document.getElementById("productdescription-2")
         .value,
     };
+    // Check if BestsellerSwitcher is marked as "bestseller"
+    const bestsellerSwitcher = document.getElementById("BestsellerSwitcher");
+    if (bestsellerSwitcher.getAttribute("bestseller") === "true") {
+      productData.bestseller = true; // Add bestseller to product data
+    } else {
+      productData.bestseller = false;
+    }
 
     const inputContainer = document.getElementById("input-container2");
     const products = inputContainer.querySelectorAll(".product-record");

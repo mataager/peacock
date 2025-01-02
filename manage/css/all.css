@@ -299,6 +299,10 @@ body {
   padding: 7px !important;
 }
 
+.p-100 {
+  padding: 100px;
+}
+
 .point {
   cursor: pointer;
 }
@@ -359,6 +363,10 @@ body {
 
 .w-300 {
   width: 300px !important;
+}
+
+.w-500 {
+  width: 500px !important;
 }
 
 
@@ -428,7 +436,10 @@ body {
   padding: 5px;
   border-radius: 4px;
   margin: 15px;
-  line-height: 0px !important;
+  line-height: 1 !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .addbtn:hover {
@@ -599,13 +610,19 @@ input {
 
 }
 
+
 .profile-icon-img {
-  background-image: url('/assets/images/peacocklogo.svg');
-  background-size: cover;
+  background-image: url('../assets/images/iicon.png');
+  background-size: contain;
+  /* Ensures the image fits within the circle */
+  background-position: center;
+  /* Centers the image */
+  background-repeat: no-repeat;
+  /* Prevents tiling */
 }
 
 .profile-icon:hover {
-  background-color: #b6b6b636;
+  background-color: #ffffff;
   color: #000000;
 }
 
@@ -1094,6 +1111,7 @@ section {
 .no-orders {
   font-weight: 600;
   color: #a7a5a5;
+  padding: 100px;
 }
 
 .blue-check {
@@ -1252,6 +1270,75 @@ section {
 .hide {
   display: hidden;
 }
+
 .inline-flex {
   display: inline-flex;
+}
+
+.border-top-y {
+  border-top: 2px solid #373714
+}
+
+.border-top-g {
+  border-top: 2px solid #00ff0026
+}
+
+.border-top-r {
+  border-top: 2px solid #ff00002b
+}
+
+.drop-zone img[src] {
+  display: block;
+  /* Show image only if a source is set */
+}
+
+.drop-zone img[src]+p {
+  display: none;
+  /* Hide text when image is present */
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-check-input::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+}
+
+.form-check-input:checked::before {
+  transform: translateX(20px);
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+.font-sm {
+  font-size: small;
 }

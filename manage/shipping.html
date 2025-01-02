@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="flex center flex-wrap" id="orders-info">
-                <div class="flex flex-wrap center">
+                <div class="flex flex-wrap center hidden">
                     <div class="card mb-20 height-max-content padding-15 ">
 
                         <h3>Total orders</h3>
@@ -75,7 +75,7 @@
 
                     </div>
                 </div>
-                <div class="flex flex-wrap center">
+                <div class="flex flex-wrap center hidden">
                     <div id="show-pending-btn" class="card mb-20 height-max-content padding-15 border-top-y"
                         onclick="showpendingOrders()">
 
@@ -95,7 +95,7 @@
 
                     </div>
                 </div>
-                <div class="flex flex-wrap center">
+                <div class="flex flex-wrap center hidden">
                     <div id="show-canceled-btn" class="card mb-20 height-max-content padding-15 border-top-r"
                         onclick="showCanceledOrders()">
                         <h3>Canceld orders</h3>
@@ -127,21 +127,8 @@
                     </button>
                 </div>
             </div>
-            <!-- <div class="flex center mt-18 mb-20">
-                <button id="show-pending-btn" class="m-LR-2 flex center align-items btn-3"
-                    onclick="showpendingOrders()">
-                    <p class="white">pending Orders</p>
-                </button>
-                <button id="show-completed-btn" class="m-LR-2 flex center align-items btn-3"
-                    onclick="showCompletedOrders()">
-                    <p class="white">Completed Orders</p>
-                </button>
-                <button id="show-canceled-btn" class="m-LR-2 flex center align-items btn-3"
-                    onclick="showCanceledOrders()">
-                    <p class="white">Canceled Orders</p>
-                </button>
-            </div> -->
-            <div id="pending-orders-section" class="mb-20">
+
+            <div id="pending-orders-section" class="mb-20 hidden">
                 <div class="flex center mb-20">
                     Pending orders
                 </div>
@@ -183,7 +170,7 @@
                     </section>
                 </div>
             </div>
-            <div id="completed-orders-section" class=" mb-20 hidden">
+            <div id="completed-orders-section" class=" mb-20">
                 <div class="flex center mb-20">
                     Completed orders
                 </div>
@@ -282,22 +269,7 @@
     <script src="./js/orders.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Function to show pending orders section
-        // Function to show pending orders section and highlight the button
-        function showpendingOrders() {
-            document.getElementById('pending-orders-section').classList.remove('hidden');
-            document.getElementById('completed-orders-section').classList.add('hidden');
-            document.getElementById('Canceled-orders-section').classList.add('hidden');
 
-
-
-            // Update button styles
-            document.getElementById('show-pending-btn').style.backgroundColor = '#6a64f142';
-            document.getElementById('show-completed-btn').style.backgroundColor = '';
-            document.getElementById('show-canceled-btn').style.backgroundColor = '';
-
-
-        }
         function showCompletedOrders() {
             const completedOrdersSection = document.getElementById('completed-orders-section');
             const completedOrdersTableBody = document.getElementById('completed-orders-table-body');
@@ -315,25 +287,6 @@
             document.getElementById('show-canceled-btn').style.backgroundColor = '';
 
             // Check if the completed orders table is empty
-
-        }
-        function showCanceledOrders() {
-            const canceledOrdersSection = document.getElementById('Canceled-orders-section');
-            const canceledOrdersTableBody = document.getElementById('Canceled-orders-table-body');
-            const pendingOrdersSection = document.getElementById('pending-orders-section');
-            const completedOrdersSection = document.getElementById('completed-orders-section');
-
-            // Toggle visibility
-            pendingOrdersSection.classList.add('hidden');
-            completedOrdersSection.classList.add('hidden');
-            canceledOrdersSection.classList.remove('hidden');
-
-            // Update button styles
-            document.getElementById('show-pending-btn').style.backgroundColor = '';
-            document.getElementById('show-completed-btn').style.backgroundColor = '';
-            document.getElementById('show-canceled-btn').style.backgroundColor = '#6a64f142';
-
-            // Check if the canceled orders table is empty
 
         }
 
