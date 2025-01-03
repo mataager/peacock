@@ -4180,7 +4180,8 @@ th {
   text-transform: uppercase;
 }
 
-.order-card .status.accepted {
+.order-card .status.accepted,
+.status.shipped {
   background-color: #379d3b;
 }
 
@@ -4188,7 +4189,8 @@ th {
   background-color: #ff9800;
 }
 
-.order-card .status.notaccepted {
+.order-card .status.notaccepted,
+.status.returned {
   background-color: #f44336;
 }
 
