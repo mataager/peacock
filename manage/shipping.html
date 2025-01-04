@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap center hidden">
-                    <div id="show-pending-btn" class="card mb-20 height-max-content padding-15 border-top-y"
+                    <div id="show-Shipped-btn" class="card mb-20 height-max-content padding-15 border-top-y"
                         onclick="showpendingOrders()">
 
                         <h3>pending orders</h3>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap center">
-                    <div id="show-completed-btn" class="card mb-20 height-max-content padding-15 border-top-g"
+                    <div id="show-completed-btn" class="card mb-20 height-max-content padding-15"
                         onclick="showCompletedOrders()">
 
                         <h3>Completed orders</h3>
@@ -95,8 +95,26 @@
 
                     </div>
                 </div>
+                <div class="flex flex-wrap center">
+                    <div id="" class="card mb-20 height-max-content padding-15 border-top-g" onclick="">
+
+                        <h3>Shipped orders</h3>
+                        <p class="break-word" id="Completed-orders"></p>
+                        <div class="shine"></div>
+
+                    </div>
+                </div>
+                <div class="flex flex-wrap center">
+                    <div id="" class="card mb-20 height-max-content padding-15 border-top-g" onclick="">
+
+                        <h3>Returned orders</h3>
+                        <p class="break-word" id="Completed-orders"></p>
+                        <div class="shine"></div>
+
+                    </div>
+                </div>
                 <div class="flex flex-wrap center hidden">
-                    <div id="show-canceled-btn" class="card mb-20 height-max-content padding-15 border-top-r"
+                    <div id="show-Returned-btn" class="card mb-20 height-max-content padding-15 border-top-r"
                         onclick="showCanceledOrders()">
                         <h3>Canceld orders</h3>
                         <p class="break-word" id="Canceld-orders"></p>
@@ -128,9 +146,9 @@
                 </div>
             </div>
 
-            <div id="pending-orders-section" class="mb-20 hidden">
+            <div id="Completed-orders" class="mb-20 ">
                 <div class="flex center mb-20">
-                    Pending orders
+                    Completed orders
                 </div>
                 <div class="flex flex-wrap center overflow-y">
                     <section class="overflow border-div-table c8080800a radius-15">
@@ -158,19 +176,15 @@
                             </div>
 
                             <table cellpadding="0" cellspacing="0">
-                                <tbody id="orders-table-body">
+                                <tbody id="completed-orders-table-body">
                                     <!-- Data will be inserted here by JavaScript -->
                                 </tbody>
                             </table>
-                            <script>
-
-                            </script>
-
                         </div>
                     </section>
                 </div>
             </div>
-            <div id="completed-orders-section" class=" mb-20">
+            <!-- <div id="Shipped-orders" class=" mb-20 hidden">
                 <div class="flex center mb-20">
                     Completed orders
                 </div>
@@ -201,14 +215,14 @@
 
                             <table cellpadding="0" cellspacing="0">
                                 <tbody id="completed-orders-table-body">
-                                    <!-- Data will be inserted here by JavaScript -->
+                                
                                 </tbody>
                             </table>
                         </div>
                     </section>
                 </div>
             </div>
-            <div id="Canceled-orders-section" class="mb-20 hidden">
+            <div id="Returned-orders" class="mb-20 hidden">
                 <div class="flex center mb-20">
                     Canceled orders
                 </div>
@@ -239,13 +253,13 @@
 
                             <table cellpadding="0" cellspacing="0">
                                 <tbody id="Canceled-orders-table-body">
-                                    <!-- Data will be inserted here by JavaScript -->
+                                    
                                 </tbody>
                             </table>
                         </div>
                     </section>
                 </div>
-            </div>
+            </div> -->
             <div class="flex center mt-18">
                 <button id="report-btn" class="m-LR-2 flex center align-items btn-3">
                     <p class="white mr-5i">Report a problem</p>
@@ -265,16 +279,14 @@
         <img class="modal-content" id="modalImage">
         <div id="caption"></div>
     </div>
-
-    <script src="./js/orders.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
         function showCompletedOrders() {
-            const completedOrdersSection = document.getElementById('completed-orders-section');
+            const completedOrdersSection = document.getElementById('Completed-orders');
             const completedOrdersTableBody = document.getElementById('completed-orders-table-body');
-            const pendingOrdersSection = document.getElementById('pending-orders-section');
-            const canceledOrdersSection = document.getElementById('Canceled-orders-section');
+            const pendingOrdersSection = document.getElementById('Shipped-orders');
+            const canceledOrdersSection = document.getElementById('Returned-orders');
 
             // Toggle visibility
             pendingOrdersSection.classList.add('hidden');
@@ -282,9 +294,9 @@
             canceledOrdersSection.classList.add('hidden');
 
             // Update button styles
-            document.getElementById('show-pending-btn').style.backgroundColor = '';
+            document.getElementById('show-Shipped-btn').style.backgroundColor = '';
             document.getElementById('show-completed-btn').style.backgroundColor = '#6a64f142';
-            document.getElementById('show-canceled-btn').style.backgroundColor = '';
+            document.getElementById('show-Returned-btn').style.backgroundColor = '';
 
             // Check if the completed orders table is empty
 
@@ -342,7 +354,7 @@
                         if (row.closest('tbody').is('#orders-table-body')) {
                             $('#pending-orders-section').removeClass('hidden');
                             // Apply background color to the "Pending" button
-                            $('#show-pending-btn').css('background-color', '#6a64f142').siblings().css('background-color', '');
+                            $('#show-Shipped-btn').css('background-color', '#6a64f142').siblings().css('background-color', '');
                         } else if (row.closest('tbody').is('#completed-orders-table-body')) {
                             $('#completed-orders-section').removeClass('hidden');
                             // Apply background color to the "Completed" button
@@ -350,7 +362,7 @@
                         } else if (row.closest('tbody').is('#Canceled-orders-table-body')) {
                             $('#Canceled-orders-section').removeClass('hidden');
                             // Apply background color to the "Canceled" button
-                            $('#show-canceled-btn').css('background-color', '#6a64f142').siblings().css('background-color', '');
+                            $('#show-Returned-btn').css('background-color', '#6a64f142').siblings().css('background-color', '');
                         }
                     }
                 });
@@ -384,7 +396,7 @@
                     $('#pending-orders-section').removeClass('hidden');
 
                     // Reset button background colors
-                    $('#show-completed-btn,#show-pending-btn,#show-canceled-btn').css('background-color', '');
+                    $('#show-completed-btn,#show-Shipped-btn,#show-Returned-btn').css('background-color', '');
 
                     // Clear the search input
                     $('#product-id-input-del').val('');
@@ -393,7 +405,7 @@
         });
 
     </script>
-
+    <script src="./js/shipping.js"></script>
 </body>
 
 </html>
