@@ -272,9 +272,13 @@ async function updateUI(user) {
               // Start building the order card
               let orderCardHTML = `
               <div class="order-card">
+              <span class="shipping-status status">${
+                orderData.shippingstatus
+              }</span>
                 <div class="order-header">
                   <h5 class="flex"><p>${key}</p></h5>
                   <div class="flex align-items flex-direction-column gap-10">
+                  
                     <span class="status ${orderData.progress.toLowerCase()}">${
                 orderData.progress
               }</span>

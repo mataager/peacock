@@ -4802,3 +4802,9 @@ th {
   align-items: center;
   gap: 5px;
 }
+
+.shipping-status {
+  color: #333333 !important;
+  font-size: small;
+  font-weight: bold;
+}
