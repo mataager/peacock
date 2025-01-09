@@ -883,6 +883,49 @@ async function uploadAvatar(avatarUrl) {
   }
 }
 
+//
+document.addEventListener("DOMContentLoaded", () => {
+  // Event delegation for dynamically added progress steps
+  document.body.addEventListener("click", (event) => {
+    const getImageUrlWithTimestamp = (baseImageUrl) =>
+      `${baseImageUrl}?t=${Date.now()}`;
+
+    if (event.target.closest("#step-1")) {
+      Swal.fire({
+        title: "Order is Preparing",
+        text: "Your order is being prepared and will be shipped soon.",
+        imageUrl: getImageUrlWithTimestamp("https://i.imgur.com/neu1a2r.gif"), // Add timestamp to URL
+        imageWidth: 150,
+        imageHeight: 150,
+        imageAlt: "Preparing Order Image",
+        confirmButtonText: "Okay",
+      });
+    } else if (event.target.closest("#step-2")) {
+      Swal.fire({
+        title: "Out for Delivery",
+        text: "Your order is on the way and will reach you shortly.",
+        imageUrl: getImageUrlWithTimestamp("https://i.imgur.com/p8zg2j0.gif"), // Add timestamp to URL
+        imageWidth: 150,
+        imageHeight: 150,
+        imageAlt: "Out for Delivery Image",
+        confirmButtonText: "Okay",
+      });
+    } else if (event.target.closest("#step-3")) {
+      Swal.fire({
+        title: "Order Delivered",
+        text: "Your order has been successfully delivered. Thank you!",
+        imageUrl: getImageUrlWithTimestamp("https://i.imgur.com/qjzBGI0.gif"), // Add timestamp to URL
+        imageWidth: 150,
+        imageHeight: 150,
+        imageAlt: "Delivered Order Image",
+        confirmButtonText: "Okay",
+      });
+    }
+  });
+});
+
+//
+
 // async function uploadAvatar(avatarUrl) {
 //   const preloader = document.getElementById("save-btn-preloader");
 //   try {
