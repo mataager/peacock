@@ -4181,7 +4181,8 @@ th {
 }
 
 .order-card .status.accepted,
-.status.shipped {
+.status.shipped,
+.status.delivered {
   background-color: #379d3b;
 }
 
@@ -4633,6 +4634,7 @@ th {
   padding: 5px 20px;
   border-radius: 16px;
   font-size: x-small;
+  font-weight: bold;
   color: white;
   text-transform: uppercase;
   background: black;
@@ -4807,4 +4809,49 @@ th {
   color: #333333 !important;
   font-size: small;
   font-weight: bold;
+}
+
+#progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin: 20px auto;
+  position: relative;
+}
+
+.progress-step {
+  text-align: center;
+  position: relative;
+}
+
+.progress-step i {
+  font-size: 12px;
+  color: gray;
+  transition: color 0.3s, transform 0.3s;
+}
+
+
+
+.progress-bar-status {
+  height: 2px;
+  background-color: gray;
+  width: 30%;
+  transition: background-color 0.3s;
+}
+
+.progress-step.active i {
+  color: rgba(0, 128, 0, 0.582);
+  transform: scale(1.2);
+}
+
+.progress-bar-status.active {
+  background-color: rgba(0, 128, 0, 0.582);
+}
+
+.progress-step i:hover {
+  cursor: pointer;
+  color: rgba(0, 128, 0, 0.582);
+  transform: scale(1.2);
+
 }
