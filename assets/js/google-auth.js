@@ -894,7 +894,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Order is Preparing",
         text: "Your order is being prepared and will be shipped soon.",
-        imageUrl: getImageUrlWithTimestamp("./assets/gif/preparing.gif"), // Add timestamp to URL
+        imageUrl: getImageUrlWithTimestamp("./assets/images/preparing.svg"), // Add timestamp to URL
         imageWidth: 150,
         imageHeight: 150,
         imageAlt: "Preparing Order Image",
@@ -904,7 +904,9 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Out for Delivery",
         text: "Your order is on the way and will reach you shortly.",
-        imageUrl: getImageUrlWithTimestamp("./assets/gif/outfordelivery.gif"), // Add timestamp to URL
+        imageUrl: getImageUrlWithTimestamp(
+          "./assets/images/outfordelivery.svg"
+        ), // Add timestamp to URL
         imageWidth: 150,
         imageHeight: 150,
         imageAlt: "Out for Delivery Image",
@@ -914,7 +916,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Order Delivered",
         text: "Your order has been successfully delivered. Thank you!",
-        imageUrl: getImageUrlWithTimestamp("./assets/gif/deliverd.gif"), // Add timestamp to URL
+        imageUrl: getImageUrlWithTimestamp("./assets/images/deliverd.svg"), // Add timestamp to URL
         imageWidth: 150,
         imageHeight: 150,
         imageAlt: "Delivered Order Image",

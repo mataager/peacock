@@ -333,6 +333,8 @@ body {
   border-radius: 25px;
 }
 
+
+
 .card-action-list {
   position: absolute;
   top: 20px;
@@ -4796,13 +4798,13 @@ th {
   font-size: small;
   color: white;
   bottom: 0;
-  z-index: 100000;
   position: absolute;
   background: black;
   padding: 5px 10px;
   display: flex;
   align-items: center;
   gap: 5px;
+  border-radius: 0px 10px 0px 0px;
 }
 
 .shipping-status {
