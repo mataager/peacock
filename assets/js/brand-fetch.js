@@ -120,6 +120,11 @@ function renderProducts() {
     const salePrice = saleAmount
       ? (originalPrice - (originalPrice * saleAmount) / 100).toFixed(2)
       : originalPrice;
+    // Check if the product is a best seller
+    const bestSellerHTML = product["bestseller"]
+      ? `<div class="best-seller" id="best-seller">bestseller<i class="bi bi-lightning-charge"></i></div>`
+      : "";
+    //
 
     const category = product["category"];
     const sizes = JSON.stringify(product["sizes"]);
@@ -140,6 +145,7 @@ function renderProducts() {
             product["product-photo2"]
           }" width="312" height="350" id="swipe2" class="image-contain" style="display: none;">
           ${saleAmount ? `<div class="card-badge">-${saleAmount}%</div>` : ""}
+          ${bestSellerHTML}
           <ul class="card-action-list">
             <li class="card-action-item">
               <button class="card-action-btn add-to-cart-btn" data-product-id="${key}" aria-labelledby="card-label-1">

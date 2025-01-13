@@ -322,15 +322,15 @@ body {
 }
 
 .card-badge {
+  border-radius: 0px 0px 10px 0px;
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 0px;
+  left: 0px;
   background: var(--bittersweet);
   color: var(--white);
   padding: 5px 15px;
   font-family: var(--ff-roboto);
   font-size: var(--fs-7);
-  border-radius: 25px;
 }
 
 
@@ -4806,6 +4806,21 @@ th {
   gap: 5px;
   border-radius: 0px 10px 0px 0px;
 }
+
+.best-seller-hint,
+.freeshipping-hint {
+  width: fit-content;
+  font-size: small;
+  color: white;
+  bottom: 0;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #000000;
+}
+
+
 
 .shipping-status {
   color: #333333 !important;
