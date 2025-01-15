@@ -271,7 +271,7 @@
 
                                 <div class="m-5 mb-10">
                                     <button id="showdetails" class="Add-to-Cart">Show Details
-                                        <i class="bi bi-list-task"></i>
+                                        <i class="bi bi-arrow-down-short"></i>
                                     </button>
                                 </div>
                                 <div id="details-section" class="m-5 mb-10 hidden">
@@ -421,7 +421,7 @@
 
 
     </div>
-    <footer class="footer">
+    <footer class="footer hidden">
         <div class="footer-top section">
             <div class="container">
 
@@ -1193,10 +1193,10 @@
         // Toggle the 'hidden' class on the details section
         if (detailsSection.classList.contains('hidden')) {
             detailsSection.classList.remove('hidden');
-            showDetailsButton.innerHTML = 'Hide Details <i class="bi bi-info"></i>';
+            showDetailsButton.innerHTML = 'Hide Details <i class="bi bi-arrow-up-short"></i>';
         } else {
             detailsSection.classList.add('hidden');
-            showDetailsButton.innerHTML = 'Show Details <i class="bi bi-info"></i>';
+            showDetailsButton.innerHTML = 'Show Details <i class="bi bi-arrow-down-short"></i>';
         }
     });
 

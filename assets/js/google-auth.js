@@ -894,7 +894,10 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Order is Preparing",
         text: "Your order is being prepared and will be shipped soon.",
-        imageUrl: getImageUrlWithTimestamp("./assets/images/preparing.svg"), // Add timestamp to URL
+        // imageUrl: getImageUrlWithTimestamp("./assets/images/preparing.svg"), // Add timestamp to URL
+        imageUrl: getImageUrlWithTimestamp(
+          "https://res.cloudinary.com/dqaz3mxb4/image/upload/v1736950755/Store1/Checking_boxes_s6v3ex.gif"
+        ), // Add timestamp to URL
         imageWidth: 150,
         imageHeight: 150,
         imageAlt: "Preparing Order Image",
@@ -904,8 +907,11 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Out for Delivery",
         text: "Your order is on the way and will reach you shortly.",
+        // imageUrl: getImageUrlWithTimestamp(
+        //   "./assets/images/outfordelivery.svg"
+        // ), // Add timestamp to URL
         imageUrl: getImageUrlWithTimestamp(
-          "./assets/images/outfordelivery.svg"
+          "https://res.cloudinary.com/dqaz3mxb4/image/upload/v1736950790/Store1/Delivery_unjohz.gif"
         ), // Add timestamp to URL
         imageWidth: 150,
         imageHeight: 150,
@@ -916,7 +922,10 @@ document.addEventListener("DOMContentLoaded", () => {
       Swal.fire({
         title: "Order Delivered",
         text: "Your order has been successfully delivered. Thank you!",
-        imageUrl: getImageUrlWithTimestamp("./assets/images/deliverd.svg"), // Add timestamp to URL
+        // imageUrl: getImageUrlWithTimestamp("./assets/images/deliverd.svg"), // Add timestamp to URL
+        imageUrl: getImageUrlWithTimestamp(
+          "https://res.cloudinary.com/dqaz3mxb4/image/upload/v1736950772/Store1/In_no_time_yifqey.gif"
+        ),
         imageWidth: 150,
         imageHeight: 150,
         imageAlt: "Delivered Order Image",

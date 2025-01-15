@@ -1,0 +1,95 @@
+<html lang="en" class="hydrated">
+
+<head>
+    <meta charset="UTF-8">
+    <style data-styles="">
+        ion-icon {
+            visibility: hidden;
+            font-size: 24px;
+            /* Adjust as needed */
+        }
+
+        .hydrated {
+            visibility: inherit
+        }
+    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="store-title"></title>
+
+
+</head>
+
+<body id="top">
+    <input type="file" id="fileInput" />
+    <button id="uploadButton">Upload</button>
+
+
+    <script>
+        async function uploadToCloudinary(file, uploadPreset, cloudName) {
+            if (!file) {
+                console.error("No file provided for upload");
+                return null;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", uploadPreset);
+
+            console.log("Uploading to Cloudinary...");
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+
+            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorDetails = await response.json();
+                    console.error("Upload error details:", errorDetails);
+                    throw new Error(errorDetails.error.message || `Upload failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Upload successful:", data);
+                return data.secure_url;
+            } catch (error) {
+                console.error("Error uploading image to Cloudinary:", error);
+                return null;
+            }
+        }
+
+        // Usage Example
+        document.getElementById("uploadButton").addEventListener("click", async () => {
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file to upload");
+                return;
+            }
+
+            const uploadPreset = "storew1kjfl"; // Replace with your unsigned upload preset name
+            const cloudName = "dqaz3mxb4"; // Replace with your Cloudinary cloud name
+
+            const imageUrl = await uploadToCloudinary(file, uploadPreset, cloudName);
+
+            if (imageUrl) {
+                console.log("Image uploaded successfully:", imageUrl);
+                alert(`Image uploaded successfully: ${imageUrl}`);
+            } else {
+                console.log("Failed to upload image.");
+                alert("Failed to upload image. Check console for details.");
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

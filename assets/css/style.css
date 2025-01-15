@@ -1608,9 +1608,27 @@ a.footer-link:is(:hover, :focus) {
     height: auto !important;
   }
 
-  /* .card-action-list {
-    display: none !important;
-  } */
+  .card-action-list {
+    position: absolute;
+    top: 10px;
+    right: -20px;
+    opacity: 0;
+    transition: var(--transition-1);
+  }
+
+  .card-action-btn {
+    background: var(--white);
+    color: var(--rich-black-fogra-29);
+    font-size: 10px;
+    padding: 7px;
+    border-radius: 50%;
+    transition: var(--transition-1);
+  }
+
+  .card-action-btn ion-icon {
+    font-size: medium !important;
+  }
+
   .footer-end {
     flex-direction: column;
   }
