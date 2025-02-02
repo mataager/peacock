@@ -694,6 +694,64 @@
 
 
 </script>
+<script>
+    function initializeProductSelections() {
+        // Select the first measurement
+        const sizeOptions = document.querySelectorAll('.size-radio');
+        if (sizeOptions.length > 0) {
+            sizeOptions[0].click(); // Trigger a click event on the first size option
+        }
+
+        // Select the first color
+        const colorOptions = document.querySelectorAll('.color-option');
+        if (colorOptions.length > 0) {
+            const firstColorOption = colorOptions[0];
+            firstColorOption.click(); // Trigger a click event on the first color option
+
+            // Optionally update the product color text
+            const productColorElement = document.getElementById('product-color');
+            if (productColorElement) {
+                const colorName = firstColorOption.getAttribute('data-color-name');
+                productColorElement.textContent = colorName;
+            }
+        }
+
+        // Remove "Must choose a color" message if present
+        const colorHintText = document.getElementById('color-hint-text');
+        if (colorHintText) {
+            colorHintText.style.display = 'none';
+        }
+    }
+
+    // Function to handle size selection
+    function SizeRef(element) {
+        const selectedSize = element.querySelector('.size-value').textContent;
+        document.getElementById('product-Size').textContent = selectedSize;
+
+        // Update any size hints if necessary
+        const sizeHintText = document.getElementById('size-hint-text');
+        if (sizeHintText) {
+            sizeHintText.style.display = 'none';
+        }
+    }
+
+    // Function to handle color selection
+    function ColorRef(element) {
+        const selectedColor = element.getAttribute('data-color-name');
+        document.getElementById('product-color').textContent = selectedColor;
+
+        // Remove any color hint text
+        const colorHintText = document.getElementById('color-hint-text');
+        if (colorHintText) {
+            colorHintText.style.display = 'none';
+        }
+    }
+
+    // Example of calling the function on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeProductSelections();
+    });
+</script>
 
 <script>
 
@@ -902,6 +960,8 @@
                 }
 
                 checkAndToggleButton("product-Size", "product-color", "addToCartButton");
+                initializeProductSelections();
+
             })
             .catch((error) => {
                 console.error("Error fetching product details:", error);

@@ -396,6 +396,8 @@ function renderSaleItems(products, saleContainer) {
 
       saleItemCount++;
       document.getElementById("preloader").style.display = "none";
+    } else {
+      document.getElementById("preloader").style.display = "none";
     }
   });
 }

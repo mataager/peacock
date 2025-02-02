@@ -46,7 +46,8 @@ function updateShippingFees() {
   // Check if free shipping threshold is met
   if (cartTotal > freeshipping || totalCartAmount > freeshipping) {
     if (shippingFeesElement) shippingFeesElement.innerText = "0 EGP";
-    if (shippingFeesElementtotal) shippingFeesElementtotal.innerText = "0 EGP";
+    if (shippingFeesElementtotal)
+      shippingFeesElementtotal.innerText = "Free Shipping";
     localStorage.setItem("shippingFees", "0");
     return; // Exit early since no further calculation is needed
   }
@@ -133,3 +134,5 @@ function appendShippingFeeDiv(city, cartItems) {
   console.log(`Cart Total: ${cartTotal.toFixed(2)} EGP`);
   console.log(`Shipping Fee: ${shippingFees.toFixed(2)} EGP`);
 }
+
+
