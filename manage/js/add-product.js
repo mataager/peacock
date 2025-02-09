@@ -128,20 +128,34 @@ document.getElementById("add-more").addEventListener("click", function () {
   setupFileInputHandlers(count);
 });
 
-//handling price after sale
 const productPriceInput = document.getElementById("productprice");
 const saleAmountInput = document.getElementById("sale-amount");
+const pricePlusCutInput = document.getElementById("priceplusthecut");
 const finalPriceInput = document.getElementById("finalprice");
+const storePriceInput = document.getElementById("Storeprice");
 
 function calculateFinalPrice() {
   const productPrice = parseFloat(productPriceInput.value) || 0;
   const saleAmount = parseFloat(saleAmountInput.value) || 0;
 
-  const discount = productPrice * (saleAmount / 100);
-  const finalPrice = productPrice - discount;
+  // Step 1: Add Matager's Cut to the Main Price
+  const matagerCut = productPrice * matager_percentage;
+  const pricePlusCut = Math.ceil(productPrice + matagerCut); // Round up
+  pricePlusCutInput.value = pricePlusCut; // Update the input field
 
-  finalPriceInput.value = finalPrice.toFixed(2);
+  // Step 2: Apply Sale on the Price + Cut
+  const discount = pricePlusCut * (saleAmount / 100);
+  const finalPrice = Math.ceil(pricePlusCut - discount); // Round up
+  finalPriceInput.value = finalPrice; // Show price after sale
+
+  // Step 3: Store Price = Final Price (rounded up)
+  storePriceInput.value = finalPrice;
 }
+
+// Trigger calculation when price or sale amount changes
+productPriceInput.addEventListener("input", calculateFinalPrice);
+saleAmountInput.addEventListener("input", calculateFinalPrice);
+
 //
 
 productPriceInput.addEventListener("input", calculateFinalPrice);
@@ -333,7 +347,6 @@ async function handleFileSelect(event, dropZone) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const clientId = "e855dfc7fb0d876";
   const preloader = document.createElement("div");
   preloader.classList.add("uploadloader");
   dropZone.appendChild(preloader);
@@ -349,19 +362,12 @@ async function handleFileSelect(event, dropZone) {
   const count = dropZoneId.split("_").pop(); // Extract the count from the drop zone ID
 
   try {
-    const response = await fetch("https://api.imgur.com/3/image", {
-      method: "POST",
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-      },
-      body: formData,
-    });
-
-    const result = await response.json();
+    // choose by the 2 ways
+    const result = await imgurUpload(clientId, formData);
+    // const result = await uploadToCloudinary(file, uploadPreset, cloudName);
     preloader.remove();
 
     const imageUrl = result.data?.link;
-
     const uploadStatus = document.createElement("div");
     uploadStatus.classList.add("upload-status");
 
@@ -371,13 +377,10 @@ async function handleFileSelect(event, dropZone) {
       dropZone.innerHTML = "";
       dropZone.appendChild(imgElement);
 
-      // if (dropZoneId.includes("dropZone1")) {
-      //   document.getElementById(`img1_${count}`).value = imageUrl;
-      // } else if (dropZoneId.includes("dropZone2")) {
-      //   document.getElementById(`img2_${count}`).value = imageUrl;
-      // }
       // Extract the dropZone number and use it for setting the corresponding img
-      const dropZoneNumber = dropZoneId.match(/\d+/)[0]; // This extracts the number from the dropZoneId
+      const dropZoneNumber = dropZoneId.match(/\d+/)[0]; // Extract the number from dropZoneId
+
+      // Check if the dropZoneNumber is within the range 1-6
       if (dropZoneNumber >= 1 && dropZoneNumber <= 6) {
         document.getElementById(`img${dropZoneNumber}_${count}`).value =
           imageUrl;
@@ -391,17 +394,14 @@ async function handleFileSelect(event, dropZone) {
         uploadStatus.innerHTML = `<p><i class="bi bi-x-circle-fill red-check"></i></p><p class="hidden">${result.data.error}</p>`;
       }
     }
-    // Append upload status to the parent of drop zone
+
+    // Append upload status to the parent of the drop zone
     dropZone.parentElement.appendChild(uploadStatus);
   } catch (error) {
     preloader.remove();
-    const uploadStatus = document.getElementById(
-      `uploadStatus${dropZoneId.slice(-1)}`
-    );
-    if (uploadStatus) {
-      uploadStatus.innerHTML = `<p><i class="bi bi-x-circle-fill red-check"></i></p><p class="hidden">${error.message}</p>`;
-    }
-    // Append upload status to the parent of drop zone
+    const uploadStatus = document.createElement("div");
+    uploadStatus.classList.add("upload-status");
+    uploadStatus.innerHTML = `<p><i class="bi bi-x-circle-fill red-check"></i></p><p class="hidden">${error.message}</p>`;
     dropZone.parentElement.appendChild(uploadStatus);
   }
 }
@@ -425,7 +425,6 @@ async function handleDrop(event, dropZone) {
   const formData = new FormData();
   formData.append("image", files[0]);
 
-  const clientId = "e855dfc7fb0d876";
   const preloader = document.createElement("div");
   preloader.classList.add("uploadloader");
   dropZone.appendChild(preloader);
@@ -441,15 +440,9 @@ async function handleDrop(event, dropZone) {
   const count = dropZoneId.split("_").pop(); // Extract the count from the drop zone ID
 
   try {
-    const response = await fetch("https://api.imgur.com/3/image", {
-      method: "POST",
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-      },
-      body: formData,
-    });
-
-    const result = await response.json();
+    // choose by the 2 ways
+    const result = await imgurUpload(clientId, formData);
+    // const result = await uploadToCloudinary(file, uploadPreset, cloudName);
     preloader.remove();
 
     const imageUrl = result.data?.link;
@@ -462,11 +455,6 @@ async function handleDrop(event, dropZone) {
       dropZone.innerHTML = "";
       dropZone.appendChild(imgElement);
 
-      // if (dropZoneId.includes("dropZone1")) {
-      //   document.getElementById(`img1_${count}`).value = imageUrl;
-      // } else if (dropZoneId.includes("dropZone2")) {
-      //   document.getElementById(`img2_${count}`).value = imageUrl;
-      // }
       // Extract the dropZone number and use it for setting the corresponding img
       const dropZoneNumber = dropZoneId.match(/\d+/)[0]; // Extract the number from dropZoneId
 
@@ -484,10 +472,12 @@ async function handleDrop(event, dropZone) {
         uploadStatus.innerHTML = `<p><i class="bi bi-x-circle-fill red-check"></i></p><p class="hidden">${result.data.error}</p>`;
       }
     }
-    // Append upload status to the parent of drop zone
+
+    // Append upload status to the parent of the drop zone
     dropZone.parentElement.appendChild(uploadStatus);
   } catch (error) {
     preloader.remove();
+
     const uploadStatus = document.createElement("div");
     uploadStatus.classList.add("upload-status");
     uploadStatus.innerHTML = `<p><i class="bi bi-x-circle-fill red-check"></i></p><p class="hidden">${error.message}</p>`;
@@ -506,6 +496,13 @@ document.querySelectorAll(".toggle-delete").forEach(function (button) {
 document
   .getElementById("add-product-form")
   .addEventListener("submit", function (event) {
+    // Get the selected size chart URL
+    const sizeChartSelect = document.getElementById("size-chart");
+    const selectedOption =
+      sizeChartSelect.options[sizeChartSelect.selectedIndex];
+
+    const selectedSizeChartUrl = selectedOption ? selectedOption.value : ""; // Get only selected or empty
+
     event.preventDefault(); // Prevent default form submission behavior
 
     // Check if the user is authenticated
@@ -538,7 +535,7 @@ document
         const formData = new FormData(this);
         const product = {
           "Brand-Name": formData.get("Brand-Name"),
-          "Product-Price": formData.get("Product-Price"),
+          "Product-Price": pricePlusCutInput.value, // Get the calculated price,
           category: formData.get("category"),
           type: formData.get("Type"),
           piece: formData.get("Piece"),
@@ -553,6 +550,7 @@ document
           "product-photo6": "", // Placeholder, will be set later
           "product-title": formData.get("product-title"),
           sizes: {}, // Object to store sizes and colors
+          "size-chart-url": selectedSizeChartUrl, // Add the selected size chart URL
         };
 
         // Iterate through each product input set

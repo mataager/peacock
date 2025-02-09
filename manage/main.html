@@ -21,9 +21,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-
     <script src="./js/inithialize-firebase.js"></script>
+    <script src="./js/checksubscription.js"></script>
+
     <script>
 
         // Firebase initialization code as shown above
@@ -32,8 +32,6 @@
         function checkAuthAndRedirect() {
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
-                    // User is signed in, continue to the page
-                    //console.log("User is signed in:", user.email);
 
                 } else {
                     // No user is signed in, redirect to login page
@@ -137,6 +135,74 @@
                         <div class="line line-3"></div>
                     </div>
                 </div>
+                <div onclick="goToshipping()" class="card mb-20 w-300 pt-16">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                            <path fill="#ffffff"
+                                d="M624 352h-16V243.9c0-12.7-5.1-24.9-14.1-33.9L494 110.1c-9-9-21.2-14.1-33.9-14.1H416V48c0-26.5-21.5-48-48-48H112C85.5 0 64 21.5 64 48v48H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h272c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H40c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H64v128c0 53 43 96 96 96s96-43 96-96h128c0 53 43 96 96 96s96-43 96-96h48c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM160 464c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm320 0c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm80-208H416V144h44.1l99.9 99.9V256z" />
+                        </svg>
+                    </span>
+                    <h4>Shipping</h4>
+                    <p>Manage and streamline your shipping process effortlessly. Mark orders as shipped, delivered, or
+                        returned to keep your
+                        customers informed and ensure smooth order fulfillment.</p>
+
+
+
+                    <div class="shine"></div>
+                    <div class="background">
+                        <div class="tiles">
+                            <div class="tile tile-1"></div>
+                            <div class="tile tile-2"></div>
+                            <div class="tile tile-3"></div>
+                            <div class="tile tile-4"></div>
+                            <div class="tile tile-5"></div>
+                            <div class="tile tile-6"></div>
+                            <div class="tile tile-7"></div>
+                            <div class="tile tile-8"></div>
+                            <div class="tile tile-9"></div>
+                            <div class="tile tile-10"></div>
+                        </div>
+                        <div class="line line-1"></div>
+                        <div class="line line-2"></div>
+                        <div class="line line-3"></div>
+                    </div>
+                </div>
+                <div onclick="goToPromoCodes()" class="card mb-20 w-300 pt-16">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                            <path fill="#ffffff"
+                                d="M374.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-320 320c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l320-320zM128 128A64 64 0 1 0 0 128a64 64 0 1 0 128 0zM384 384a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z" />
+                        </svg>
+                    </span>
+                    <h4>Promo Code</h4>
+                    <p>Manage and streamline your shipping process effortlessly. Mark orders as shipped, delivered, or
+                        returned to keep your
+                        customers informed and ensure smooth order fulfillment.</p>
+
+
+
+                    <div class="shine"></div>
+                    <div class="background">
+                        <div class="tiles">
+                            <div class="tile tile-1"></div>
+                            <div class="tile tile-2"></div>
+                            <div class="tile tile-3"></div>
+                            <div class="tile tile-4"></div>
+                            <div class="tile tile-5"></div>
+                            <div class="tile tile-6"></div>
+                            <div class="tile tile-7"></div>
+                            <div class="tile tile-8"></div>
+                            <div class="tile tile-9"></div>
+                            <div class="tile tile-10"></div>
+                        </div>
+                        <div class="line line-1"></div>
+                        <div class="line line-2"></div>
+                        <div class="line line-3"></div>
+                    </div>
+                </div>
                 <div onclick="goToShop()" class="card mb-20 w-300 pt-16">
                     <span class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -182,6 +248,75 @@
                     <p>Track your completed orders count, view your earnings, calculate the Matager platform’s
                         commission, and easily upgrade your
                         plan for more features and benefits.</p>
+
+
+                    <div class="shine"></div>
+                    <div class="background">
+                        <div class="tiles">
+                            <div class="tile tile-1"></div>
+                            <div class="tile tile-2"></div>
+                            <div class="tile tile-3"></div>
+                            <div class="tile tile-4"></div>
+                            <div class="tile tile-5"></div>
+                            <div class="tile tile-6"></div>
+                            <div class="tile tile-7"></div>
+                            <div class="tile tile-8"></div>
+                            <div class="tile tile-9"></div>
+                            <div class="tile tile-10"></div>
+                        </div>
+                        <div class="line line-1"></div>
+                        <div class="line line-2"></div>
+                        <div class="line line-3"></div>
+                    </div>
+                </div>
+                <div class="card mb-20 w-300 pt-16">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                            <path fill="#ffffff"
+                                d="M290.7 57.4L57.4 290.7c-25 25-25 65.5 0 90.5l80 80c12 12 28.3 18.7 45.3 18.7L288 480l9.4 0L512 480c17.7 0 32-14.3 32-32s-14.3-32-32-32l-124.1 0L518.6 285.3c25-25 25-65.5 0-90.5L381.3 57.4c-25-25-65.5-25-90.5 0zM297.4 416l-9.4 0-105.4 0-80-80L227.3 211.3 364.7 348.7 297.4 416z" />
+                        </svg>
+                    </span>
+                    <h4>Background Removal</h4>
+                    <p>Effortlessly remove backgrounds from your images to create professional, clean visuals. Perfect
+                        for e-commerce or more.</p>
+
+
+
+                    <div class="shine"></div>
+                    <div class="background">
+                        <div class="tiles">
+                            <div class="tile tile-1"></div>
+                            <div class="tile tile-2"></div>
+                            <div class="tile tile-3"></div>
+                            <div class="tile tile-4"></div>
+                            <div class="tile tile-5"></div>
+                            <div class="tile tile-6"></div>
+                            <div class="tile tile-7"></div>
+                            <div class="tile tile-8"></div>
+                            <div class="tile tile-9"></div>
+                            <div class="tile tile-10"></div>
+                        </div>
+                        <div class="line line-1"></div>
+                        <div class="line line-2"></div>
+                        <div class="line line-3"></div>
+                    </div>
+                </div>
+                <div onclick="goToSizeChart()" class="card mb-20 w-300 pt-16">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                            <path fill="#ffffff"
+                                d="M177.9 494.1c-18.7 18.7-49.1 18.7-67.9 0L17.9 401.9c-18.7-18.7-18.7-49.1 0-67.9l50.7-50.7 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 50.7-50.7c18.7-18.7 49.1-18.7 67.9 0l92.1 92.1c18.7 18.7 18.7 49.1 0 67.9L177.9 494.1z" />
+                        </svg>
+                    </span>
+                    <h4>Size Charts</h4>
+                    <p>Customize your size charts and assign them to specific items. This feature enhances the shopping
+                        experience and helps
+                        reduce sizing-related issues.</p>
+
+
+
 
 
                     <div class="shine"></div>
@@ -336,37 +471,7 @@
                         <div class="line line-3"></div>
                     </div>
                 </div>
-                <div onclick="goToshipping()" class="card mb-20 w-300 pt-16">
-                    <span class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 640 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                            <path fill="#ffffff"
-                                d="M624 352h-16V243.9c0-12.7-5.1-24.9-14.1-33.9L494 110.1c-9-9-21.2-14.1-33.9-14.1H416V48c0-26.5-21.5-48-48-48H112C85.5 0 64 21.5 64 48v48H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h272c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H40c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H64v128c0 53 43 96 96 96s96-43 96-96h128c0 53 43 96 96 96s96-43 96-96h48c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM160 464c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm320 0c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm80-208H416V144h44.1l99.9 99.9V256z" />
-                        </svg>
-                    </span>
-                    <h4>Shipping</h4>
-                    <p>Comming Soon</p>
 
-
-                    <div class="shine"></div>
-                    <div class="background">
-                        <div class="tiles">
-                            <div class="tile tile-1"></div>
-                            <div class="tile tile-2"></div>
-                            <div class="tile tile-3"></div>
-                            <div class="tile tile-4"></div>
-                            <div class="tile tile-5"></div>
-                            <div class="tile tile-6"></div>
-                            <div class="tile tile-7"></div>
-                            <div class="tile tile-8"></div>
-                            <div class="tile tile-9"></div>
-                            <div class="tile tile-10"></div>
-                        </div>
-                        <div class="line line-1"></div>
-                        <div class="line line-2"></div>
-                        <div class="line line-3"></div>
-                    </div>
-                </div>
 
 
             </div>
@@ -401,6 +506,13 @@
                 function goToBalance() {
                     window.location.href = 'balance.html';
                 }
+                function goToSizeChart() {
+                    window.location.href = 'sizecharts.html';
+                }
+
+                // function goToBgRemoval() {
+                //     window.location.href = 'BgRemoval.html';
+                // }
                 function goToreport() {
                     window.location.href = 'report.html';
                 }

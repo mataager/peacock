@@ -21,36 +21,87 @@
 </head>
 
 <body id="top">
-    <main>
-        <div class="formbold-form-wrapper">
-            <div class="flex flex-column align-items">
-                <img class="w-100" src="./assets/images/iicon.png">
-            </div>
-            <form class="flex flex-column align-items" id="LogIn">
-                <div class="formbold-input-group max-500">
-                    <label for="username" class="formbold-form-label max-500">UserName</label>
-                    <input type="text" name="username" id="username" placeholder="Enter your UserName"
-                        class="formbold-form-input shadow max-500" />
-                </div>
-                <div class="formbold-input-group max-500">
-                    <label for="password" class="formbold-form-label max-500">Password</label>
-                    <input type="password" name="password" id="password" placeholder="Enter your Password"
-                        class="formbold-form-input shadow max-500" />
-                </div>
-                <button id="LogInButton" type="submit" class="formbold-btn flex center align-items max-500"
-                    style="width: 100px;height: 40px;">
-                    <div id="sub-txt">
-                        <p>Login</p>
+    <main class="mb-20">
+        <div class="formbold-form-wrapper flex center">
+            <!-- <div class="signinup">
+                <img class="pbm-img" src="./assets/images/pbm.svg" alt="">
+
+                <div class="p-20 w-available">
+                    <div class="flex flex-column align-items">
+                        <img class="w-100" src="./assets/images/iicon.png">
                     </div>
-                    <div id="sub-spin" class="spinner-sm hidden"></div>
-                </button>
-            </form>
+                    <form class="flex flex-column align-items" id="LogIn">
+                        <div class="formbold-input-group max-500">
+                            <label for="username" class="formbold-form-label max-500">UserName</label>
+                            <input type="text" name="username" id="username" placeholder="Enter your UserName"
+                                class="formbold-form-input shadow max-500" />
+                        </div>
+                        <div class="formbold-input-group max-500">
+                            <label for="password" class="formbold-form-label max-500">Password</label>
+                            <input type="password" name="password" id="password" placeholder="Enter your Password"
+                                class="formbold-form-input shadow max-500" />
+                        </div>
+                        <button id="LogInButton" type="submit" class="formbold-btn flex center align-items max-500"
+                            style="width: 100px;height: 40px;">
+                            <div id="sub-txt">
+                                <p>Login</p>
+                            </div>
+                            <div id="sub-spin" class="spinner-sm hidden"></div>
+                        </button>
+                    </form>
+                </div>
+
+            </div> -->
+            <div class="signinup">
+
+                <div class="pbm-container">
+                    <img class="pbm-img" src="./assets/images/pbm.svg" alt="PBM">
+                    <div class="overlay-ppm">
+                        <a href="https://www.matager.online" target="_blank">Go to Matager</a>
+                    </div>
+                </div>
+
+
+                <div class="p-20 w-available flex center column">
+                    <div class="flex flex-column align-items">
+                        <img class="w-100" src="./assets/images/iicon.png">
+                    </div>
+                    <form class="flex flex-column align-items" id="LogIn">
+                        <div class="formbold-input-group max-500 relative min-h-65">
+                            <label for="username" class="formbold-form-label max-500">UserName</label>
+                            <input type="text" name="username" id="username" placeholder="Enter your UserName"
+                                class="formbold-form-input shadow max-500" />
+                            <p id="usernameError" class="log-error-message hidden">Wrong username</p>
+                            <!-- Username error -->
+                        </div>
+                        <div class="formbold-input-group max-500 relative min-h-65">
+                            <label for="password" class="formbold-form-label max-500">Password</label>
+                            <input type="password" name="password" id="password" placeholder="Enter your Password"
+                                class="formbold-form-input shadow max-500" />
+                            <p id="passwordError" class="log-error-message hidden">Incorrect password</p>
+                            <!-- Password error -->
+                        </div>
+                        <button id="LogInButton" type="submit" class="formbold-btn flex center align-items max-500"
+                            style="width: 100px;height: 40px;">
+                            <div id="sub-txt">
+                                <p>Login</p>
+                            </div>
+                            <div id="sub-spin" class="spinner-sm hidden"></div>
+                        </button>
+
+                        <!-- Forgot Password Link -->
+                        <div class="forgot-password">
+                            <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
             <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
             <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
             <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
+            <script src="./js/checksubscription.js"></script>
             <script>
                 const firebaseConfig = {
                     apiKey: "AIzaSyDss53pHibCpqo87_1bhoUHkf8Idnj-Fig",
@@ -66,10 +117,12 @@
                 // Initialize Firebase
                 const app = firebase.initializeApp(firebaseConfig);
                 const auth = firebase.auth();
-
-                // Function to log in and fetch store info
                 const loginUser = async (username, password) => {
                     try {
+                        // Hide previous error messages
+                        document.getElementById('usernameError').classList.add('hidden');
+                        document.getElementById('passwordError').classList.add('hidden');
+
                         // Show spinner inside button
                         document.getElementById('sub-txt').classList.add('hidden');
                         document.getElementById('sub-spin').classList.remove('hidden');
@@ -77,6 +130,13 @@
                         // Sign in with email and password
                         const userCredential = await auth.signInWithEmailAndPassword(username, password);
                         const user = userCredential.user;
+                        const subscriptionActive = await checkSubscription(user);
+                        if (!subscriptionActive) {
+                            // Stop login flow if subscription is expired
+                            document.getElementById('sub-txt').classList.remove('hidden');
+                            document.getElementById('sub-spin').classList.add('hidden');
+                            return;
+                        }
                         const uid = user.uid;
                         const createdAt = user.metadata.creationTime;
                         const lastSignInTime = user.metadata.lastSignInTime;
@@ -107,15 +167,25 @@
                         window.location.href = './main.html';
 
                     } catch (error) {
-                        // Handle authentication error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Authentication Error',
-                            text: error.message,
-                        });
+                        console.error("Login Error:", error.message);
+
                         // Hide spinner and show text again
                         document.getElementById('sub-txt').classList.remove('hidden');
                         document.getElementById('sub-spin').classList.add('hidden');
+
+                        // Handle specific errors
+                        if (error.code === 'auth/user-not-found') {
+                            document.getElementById('usernameError').textContent = "Wrong username";
+                            document.getElementById('usernameError').classList.remove('hidden');
+                        } else if (error.code === 'auth/wrong-password') {
+                            document.getElementById('passwordError').textContent = "Wrong password";
+                            document.getElementById('passwordError').classList.remove('hidden');
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                text: "It Seems That You Had Entered Incorrect Email Or Password",
+                            });
+                        }
                     }
                 };
 
@@ -123,12 +193,31 @@
                 document.getElementById('LogIn').addEventListener('submit', function (event) {
                     event.preventDefault(); // Prevent the default form submission
 
-                    const username = document.getElementById('username').value;
-                    const password = document.getElementById('password').value;
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value.trim();
+
+                    // Clear previous error messages
+                    document.getElementById('usernameError').classList.add('hidden');
+                    document.getElementById('passwordError').classList.add('hidden');
+
+                    // Check if username is empty
+                    if (username === "") {
+                        document.getElementById('usernameError').textContent = "Username field is required!";
+                        document.getElementById('usernameError').classList.remove('hidden');
+                        return;
+                    }
+
+                    // Check if password is empty
+                    if (password === "") {
+                        document.getElementById('passwordError').textContent = "Password field is required!";
+                        document.getElementById('passwordError').classList.remove('hidden');
+                        return;
+                    }
 
                     // Call login function
                     loginUser(username, password);
                 });
+
             </script>
 
             <style>
