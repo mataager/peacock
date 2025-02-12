@@ -111,7 +111,7 @@
                     </span>
                 </h3>
             </div>
-            <form id="sizeChartForm">
+            <form id="sizeChartForm" class="flex center column align-items">
                 <div class="drop-zone" id="dropZone2_1" ondragover="handleDragOver(event, this)"
                     ondragleave="handleDragLeave(event, this)" ondrop="handleDrop(event, this)">
                     <div class="flex flex-column">
@@ -120,14 +120,16 @@
                         <input type="file" id="sizeChartFile" accept="image/*" required hidden />
                     </div>
                 </div>
-                <input type="text" name="" id="chartName" placeholder="Enter a chart name"
-                    class="formbold-form-input shadow w-auto hidden">
+                <div>
+                    <input type="text" name="" id="chartName" placeholder="Enter a chart name"
+                        class="formbold-form-input shadow w-auto hidden">
 
 
-                <button type="submit" class="formbold-btn flex center align-items upload-chart-btn">
-                    <div id="sub-txt">Upload</div>
-                    <div id="sub-spin" class="spinner-sm hidden">
-                    </div>
+                    <button type="submit" class="formbold-btn flex center align-items upload-chart-btn">
+                        <div id="sub-txt">Upload</div>
+                        <div id="sub-spin" class="spinner-sm hidden">
+                        </div>
+                </div>
                 </button>
 
             </form>

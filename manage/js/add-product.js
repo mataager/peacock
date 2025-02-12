@@ -30,7 +30,7 @@ document.getElementById("add-more").addEventListener("click", function () {
         <i class="bi bi-arrows-angle-contract"></i>
         <i class="bi bi-arrows-angle-expand none"></i>
       </button>
-      <button type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate cus-btn">
+      <button title="duplicate this item" type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate cus-btn">
         <i class="bi bi-copy"></i>
       </button>
       <button type="button" style="border: none; margin-left:auto" class="point no-bg-i toggle-delete ml-auto cus-btn">
@@ -49,12 +49,15 @@ document.getElementById("add-more").addEventListener("click", function () {
         <h5 class="none color-value" id="colorvalue"></h5>
       </div>
     </div>
-    <div class="product-data" id="product-data">
-      <div class="flex mb-10">
+    <div class="product-data" style="max-height: 1300px; opacity: 1; padding: 10px 0px;"  id="product-data">
+      <div class="flex mb-10 minline-140">
         <input id="size${count}" type="text" name="size" placeholder="Size" class="formbold-form-input m-LR-2">
         <input id="quantity${count}" value="1" type="text" name="quantity" placeholder="Quantity" class="formbold-form-input m-LR-2">
       </div>
-      <div class="flex flex-wrap mb-3">
+      <div class="flex center">
+      <button type="button" class="show-img-url" onclick="toggleImageInputs(${count})">Show Images Urls <i class="bi bi-eye-fill"></i></button>
+      </div>
+      <div class="flex flex-wrap mb-3 imgids" id="image-inputs-${count}">
         <input type="text" id="img1_${count}" name="product-photo" placeholder="pic url 1" class="formbold-form-input m-LR-2 mb-10">
         <input type="text" id="img2_${count}" name="product-photo2" placeholder="pic url 2" class="formbold-form-input m-LR-2 mb-10">
         <input type="text" id="img3_${count}" name="product-photo3" placeholder="pic url 3" class="formbold-form-input m-LR-2 mb-10">
@@ -62,6 +65,7 @@ document.getElementById("add-more").addEventListener("click", function () {
         <input type="text" id="img5_${count}" name="product-photo5" placeholder="pic url 5" class="formbold-form-input m-LR-2 mb-10">
         <input type="text" id="img6_${count}" name="product-photo6" placeholder="pic url 6" class="formbold-form-input m-LR-2 mb-10">
       </div>
+      
       <div class="flex flex-wrap center mb-3">
         <div class="flex flex-column align-items">
         
@@ -102,7 +106,7 @@ document.getElementById("add-more").addEventListener("click", function () {
             <input id="Color${count}" type="color" name="color-value" class="color-picker">
           </div>
         </div>
-        <input id="colorname${count}" type="text" name="color-name" style="width: 50%;" placeholder="Black" class="formbold-form-input m-LR-2">
+        <input id="colorname${count}" type="text" name="color-name" style="width: 150px;" placeholder="Black" class="formbold-form-input m-LR-2">
       </div>
       <input type="file" id="cameraInput1_${count}" accept="image/*" capture="camera" style="display: none;">
       <input type="file" id="galleryInput1_${count}" accept="image/*" style="display: none;">
@@ -152,7 +156,55 @@ function calculateFinalPrice() {
   storePriceInput.value = finalPrice;
 }
 
+// function toggleImageInputs(count) {
+//   const imageInputs = document.getElementById(`image-inputs-${count}`);
+//   const button = document.querySelector(
+//     `button[onclick="toggleImageInputs(${count})"]`
+//   );
+
+//   if (imageInputs.classList.contains("hidden")) {
+//     imageInputs.classList.remove("hidden");
+//     imageInputs.classList.add("open");
+//     button.textContent = "Hide Images";
+//   } else {
+//     imageInputs.classList.add("hidden");
+//     imageInputs.classList.remove("open");
+//     button.textContent = "Show Images";
+//   }
+// }
+
 // Trigger calculation when price or sale amount changes
+function toggleImageInputs(count) {
+  const imageInputs = document.getElementById(`image-inputs-${count}`);
+  const button = document.querySelector(
+    `button[onclick="toggleImageInputs(${count})"]`
+  );
+
+  if (!imageInputs.classList.contains("open")) {
+    // Dynamically set the height to its scrollHeight
+    imageInputs.style.height = `${imageInputs.scrollHeight}px`;
+    imageInputs.classList.add("open");
+    button.innerHTML = 'Hide Images Urls <i class="bi bi-eye-slash-fill"></i>';
+
+    // Remove inline height after transition ends
+    imageInputs.addEventListener(
+      "transitionend",
+      () => (imageInputs.style.height = ""),
+      { once: true }
+    );
+  } else {
+    // Set the height to its current height before collapsing
+    imageInputs.style.height = `${imageInputs.scrollHeight}px`;
+
+    // Force reflow before collapsing
+    requestAnimationFrame(() => {
+      imageInputs.style.height = "0";
+      imageInputs.classList.remove("open");
+      button.innerHTML = 'Show Images Urls <i class="bi bi-eye-fill"></i>';
+    });
+  }
+}
+
 productPriceInput.addEventListener("input", calculateFinalPrice);
 saleAmountInput.addEventListener("input", calculateFinalPrice);
 
@@ -160,6 +212,61 @@ saleAmountInput.addEventListener("input", calculateFinalPrice);
 
 productPriceInput.addEventListener("input", calculateFinalPrice);
 saleAmountInput.addEventListener("input", calculateFinalPrice);
+
+// function setupToggleExpand(button) {
+//   button.addEventListener("click", function () {
+//     const expandIcon = button.querySelector(".bi-arrows-angle-expand");
+//     const contractIcon = button.querySelector(".bi-arrows-angle-contract");
+//     const inputSet = button.closest(".input-set");
+//     const productData = inputSet.querySelector("#product-data");
+
+//     // Determine the dynamic ID for the elements inside `product-data`
+//     const idSuffix = inputSet.id.replace(/^p/, ""); // Extracts the numeric part of the ID
+
+//     const sizeInput = productData.querySelector(`#size${idSuffix}`);
+//     const quantityInput = productData.querySelector(`#quantity${idSuffix}`);
+//     const colorInput = productData.querySelector(`#Color${idSuffix}`);
+
+//     const sizeLabel = inputSet.querySelector("#size");
+//     const quantityLabel = inputSet.querySelector("#Quantity");
+//     const colorCircleLabel = inputSet.querySelector("#Colorcircle");
+//     const sizeValue = inputSet.querySelector("#sizevalue");
+//     const colorValue = inputSet.querySelector("#colorvalue");
+//     const quantityValue = inputSet.querySelector("#QuantityValue");
+
+//     if (expandIcon.classList.contains("none")) {
+//       expandIcon.classList.remove("none");
+//       contractIcon.classList.add("none");
+//       productData.classList.add("none");
+
+//       sizeLabel.classList.remove("none");
+//       colorCircleLabel.classList.remove("none");
+//       quantityLabel.classList.remove("none");
+//       sizeValue.classList.remove("none");
+//       colorValue.classList.remove("none");
+//       quantityValue.classList.remove("none");
+
+//       // Display the values from the inputs
+//       sizeValue.textContent = sizeInput ? sizeInput.value : "";
+//       quantityValue.textContent = quantityInput ? quantityInput.value : "";
+//       if (colorInput) {
+//         colorCircleLabel.style.backgroundColor = colorInput.value;
+//         colorValue.textContent = colorInput.value;
+//       }
+//     } else {
+//       expandIcon.classList.add("none");
+//       contractIcon.classList.remove("none");
+//       productData.classList.remove("none");
+
+//       sizeLabel.classList.add("none");
+//       colorCircleLabel.classList.add("none");
+//       quantityLabel.classList.add("none");
+//       sizeValue.classList.add("none");
+//       colorValue.classList.add("none");
+//       quantityValue.classList.add("none");
+//     }
+//   });
+// }
 
 function setupToggleExpand(button) {
   button.addEventListener("click", function () {
@@ -182,10 +289,23 @@ function setupToggleExpand(button) {
     const colorValue = inputSet.querySelector("#colorvalue");
     const quantityValue = inputSet.querySelector("#QuantityValue");
 
-    if (expandIcon.classList.contains("none")) {
-      expandIcon.classList.remove("none");
-      contractIcon.classList.add("none");
-      productData.classList.add("none");
+    // Ensure `max-height` is properly initialized if not set
+    if (!productData.style.maxHeight) {
+      productData.style.maxHeight = "1300px"; // Ensure it starts open
+      productData.style.opacity = "1";
+      productData.style.padding = "10px 0";
+    }
+
+    const isExpanded = productData.style.maxHeight !== "0px";
+
+    if (isExpanded) {
+      // Collapse product data
+      productData.style.maxHeight = "0px";
+      productData.style.opacity = "0";
+      productData.style.padding = "0";
+
+      expandIcon.style.display = "inline";
+      contractIcon.style.display = "none";
 
       sizeLabel.classList.remove("none");
       colorCircleLabel.classList.remove("none");
@@ -195,16 +315,20 @@ function setupToggleExpand(button) {
       quantityValue.classList.remove("none");
 
       // Display the values from the inputs
-      sizeValue.textContent = sizeInput ? sizeInput.value : "";
-      quantityValue.textContent = quantityInput ? quantityInput.value : "";
+      if (sizeInput) sizeValue.textContent = sizeInput.value;
+      if (quantityInput) quantityValue.textContent = quantityInput.value;
       if (colorInput) {
         colorCircleLabel.style.backgroundColor = colorInput.value;
         colorValue.textContent = colorInput.value;
       }
     } else {
-      expandIcon.classList.add("none");
-      contractIcon.classList.remove("none");
-      productData.classList.remove("none");
+      // Expand product data
+      productData.style.maxHeight = "1300px";
+      productData.style.opacity = "1";
+      productData.style.padding = "10px 0";
+
+      expandIcon.style.display = "none";
+      contractIcon.style.display = "inline";
 
       sizeLabel.classList.add("none");
       colorCircleLabel.classList.add("none");
@@ -261,10 +385,36 @@ function setupDuplicateButton(button) {
   });
 }
 
-function updateElementIds(element, count) {
-  element.querySelectorAll("[id]").forEach((el) => {
-    const newId = el.id.replace(/\d+$/, count);
-    el.id = newId;
+// function updateElementIds(element, count) {
+//   element.querySelectorAll("[id]").forEach((el) => {
+//     const newId = el.id.replace(/\d+$/, count);
+//     el.id = newId;
+//   });
+// }
+
+function updateElementIds(record, count) {
+  record.querySelectorAll("[id]").forEach((element) => {
+    // Handle IDs ending with numbers
+    if (/\d+$/.test(element.id)) {
+      element.id = element.id.replace(/\d+$/, count);
+    }
+    // Handle IDs with underscores (e.g., img1_1 -> img1_count)
+    else if (element.id.includes("_")) {
+      const parts = element.id.split("_");
+      element.id = `${parts[0]}_${count}`;
+    }
+    // Handle IDs with 'image-inputs-' prefix
+    else if (element.id.includes("image-inputs-")) {
+      element.id = `image-inputs-${count}`;
+    }
+  });
+
+  // Update "onclick" attributes for buttons
+  record.querySelectorAll("[onclick]").forEach((button) => {
+    button.setAttribute(
+      "onclick",
+      button.getAttribute("onclick").replace(/\d+/, count)
+    );
   });
 }
 
@@ -631,24 +781,41 @@ document
             }
             return response.json();
           })
+          // .then((data) => {
+          //   Swal.fire({
+          //     title: "Success!",
+          //     text: "Product added successfully.",
+          //     icon: "success",
+          //     showConfirmButton: false,
+          //     customClass: {
+          //       container: "swal2-custom",
+          //       title: "swal2-custom",
+          //     },
+          //   });
           .then((data) => {
             Swal.fire({
               title: "Success!",
               text: "Product added successfully.",
               icon: "success",
+              toast: true, // Enables top-right position
+              position: "top-end",
               showConfirmButton: false,
+              timer: 5000, // Auto-dismiss after 5 seconds
               customClass: {
                 container: "swal2-custom",
                 title: "swal2-custom",
               },
             });
+            decreaseStock();
+            document.getElementById("add-product-form").reset(); // Reset form
+            document.getElementById("input-container").innerHTML = "";
             submitTxt.classList.remove("hidden");
             submitButton.classList.add("hidden");
 
             // Wait for 1.5 seconds before reloading the page
-            setTimeout(() => {
-              window.location.reload();
-            }, 1500);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1500);
           })
           .catch((error) => {
             console.error("Error adding document: ", error);

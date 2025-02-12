@@ -146,7 +146,7 @@ async function searchProduct() {
               <i class="bi bi-arrows-angle-contract"></i>
               <i class="bi bi-arrows-angle-expand none"></i>
             </button>
-            <button type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate2 cus-btn">
+            <button title="duplicate this item" type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate2 cus-btn">
               <i class="bi bi-copy"></i>
             </button>
             <button type="button" style="border: none; margin-left:auto" class=" point no-bg-i toggle-delete2 ml-auto cus-btn">
@@ -561,7 +561,7 @@ document.getElementById("add-more2").addEventListener("click", function () {
         <i class="bi bi-arrows-angle-contract no-bg-i"></i>
         <i class="bi bi-arrows-angle-expand no-bg-i none"></i>
       </button>
-      <button type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate2 cus-btn">
+      <button title="duplicate this item" type="button" style="border: none; margin-left:5px;margin-bottom:0px;" class="formbold-form-label point toggle-duplicate2 cus-btn">
         <i class="bi bi-copy"></i>
       </button>
       <button type="button" style="border: none; margin-left:auto" class=" point no-bg-i toggle-delete2 ml-auto cus-btn">

@@ -27,6 +27,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="./js/static.js"></script>
     <script src="./js/inithialize-firebase.js"></script>
+    <script src="./js/checkavailableitems.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
 
@@ -38,6 +39,7 @@
                 if (user) {
                     // User is signed in, continue to the page
                     // console.log("User is signed in:", user.email);
+                    checkavailableitems(user)
 
                 } else {
                     // No user is signed in, redirect to login page
@@ -57,7 +59,7 @@
                         const idToken = await user.getIdToken();
 
                         // Construct the URL with the user's UID
-                        const url = `https://matager-f1f00-default-rtdb.firebaseio.com/Stores/${uid}/sizecharts.json?auth=${idToken}`;
+                        const url = `https://matager-f1f00-default-rtdb.firebaseio.com/Stores/${user.uid}/sizecharts.json?auth=${idToken}`;
 
                         // Fetch size charts
                         const response = await fetch(url, {
@@ -67,23 +69,67 @@
                         });
 
                         const sizeCharts = await response.json();
-                        if (!sizeCharts) {
-                            console.error("No size charts found.");
+                        const selectElement = document.getElementById('size-chart');
+                        const selectElementArea = document.getElementById('size-chart-area');
+
+                        // Clear previous options
+                        selectElement.innerHTML = "";
+
+                        // Check if size charts exist
+                        if (!sizeCharts || Object.keys(sizeCharts).length === 0) {
+                            console.warn("No size charts found.");
+
+                            // Create a disabled placeholder option
+                            const placeholderOption = document.createElement("option");
+                            placeholderOption.value = "";
+                            placeholderOption.disabled = true;
+                            placeholderOption.selected = true;
+                            placeholderOption.textContent = "No size charts available";
+                            selectElement.appendChild(placeholderOption);
+
+                            // Keep select disabled if no size charts are available
+                            selectElement.disabled = true;
+
+                            // Ensure "Add Chart" link is present without overwriting the container
+                            if (!document.getElementById('addChart')) {
+                                const addChartLink = document.createElement("a");
+                                addChartLink.href = "./sizecharts.html";
+                                addChartLink.classList.add('addchartlink');
+                                addChartLink.id = "addChart";
+                                addChartLink.textContent = "Add a Chart";
+                                selectElementArea.appendChild(addChartLink);
+                            }
+
                             return;
                         }
 
-                        // Get the dropdown select element
-                        const selectElement = document.getElementById('size-chart');
-                        selectElement.innerHTML = `<option value="" disabled selected>Size Charts</option>`; // Reset options
+                        // Add default "Select a size chart" option
+                        const defaultOption = document.createElement("option");
+                        defaultOption.value = "";
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        defaultOption.textContent = "Select a size chart";
+                        selectElement.appendChild(defaultOption);
 
-                        // Populate dropdown with size chart names
+                        // Populate dropdown with size charts
                         Object.entries(sizeCharts).forEach(([chartId, chart]) => {
                             const option = document.createElement("option");
                             option.value = chart.sizeChartUrl;
-                            option.setAttribute("data-id", chartId); // Store chart ID for reference
+                            option.setAttribute("data-id", chartId);
                             option.textContent = chart.chartName;
                             selectElement.appendChild(option);
                         });
+
+                        // // Append "Add Chart" below the dropdown (if not already added)
+                        // if (!document.getElementById('addChart')) {
+                        //     const addChartLink = document.createElement("a");
+                        //     addChartLink.href = "./sizecharts.html";
+                        //     addChartLink.id = "addChart";
+                        //     addChartLink.classList.add('addchartlink');
+                        //     addChartLink.textContent = "Add a Chart";
+                        //     selectElementArea.appendChild(addChartLink);
+                        // }
+
 
                         // Add event listener to handle selection
                         selectElement.addEventListener("change", function () {
@@ -99,7 +145,6 @@
                             // Set 'selected' attribute to the chosen option
                             selectedOption.setAttribute("selected", "selected");
 
-                            console.log("Selected Size Chart:", selectedChartId, selectedChartUrl);
                         });
 
                     } catch (error) {
@@ -113,27 +158,7 @@
             });
         }
 
-        // document.addEventListener("DOMContentLoaded", function () {
-        //     const bestsellerSwitcher = document.getElementById("BestsellerSwitcheradd");
 
-        //     if (bestsellerSwitcher) {
-        //         // Function to update the bestseller attribute
-        //         function updateBestsellerAttribute() {
-        //             bestsellerSwitcher.setAttribute(
-        //                 "bestseller",
-        //                 bestsellerSwitcher.checked ? "true" : "false"
-        //             );
-        //             console.log(
-        //                 "Best seller attribute set to:",
-        //                 bestsellerSwitcher.getAttribute("bestseller")
-        //             );
-        //         }
-
-        //         // Listen for checkbox changes
-        //         bestsellerSwitcher.addEventListener("change", updateBestsellerAttribute);
-        //     }
-        // });
-        // Call the function after DOM is loaded
         document.addEventListener("DOMContentLoaded", checkAuthAndFetchSizeCharts);
     </script>
 
@@ -183,8 +208,34 @@
                     <span><i class="bi bi-folder-x"></i></span>
                 </div>
             </div>
-
             <form id="add-product-form">
+                <div class="progress-container">
+                    <div class="flex">
+                        <span class="stock-count stock-count-card flex align-items-center" id="stockCount">Available
+                            Products: <div class="spinner-sm ml-auto">
+                            </div>
+                            <p id="available-items-stock"></p>
+                        </span>
+                        <span class="stock-count stock-count-card flex align-items-center" id="">Uploaded Products: <div
+                                class="spinner-sm ml-auto">
+                            </div>
+                            <p id="total-products-count"></p>
+                        </span>
+                    </div>
+
+                    <div class="progress hidden" id="progress-bar-area">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="preview-area">
+                    <button class="preview-btn">
+                        <div>preview</div>
+
+                    </button>
+                </div>
 
                 <div class="formbold-input-group">
                     <label for="producttitle" class="formbold-form-label"> Product-Title </label>
@@ -210,12 +261,12 @@
                                 <input type="text" name="sale-amount" id="sale-amount" placeholder="%"
                                     class="formbold-form-input shadow" />
                             </div>
-                            <div class="formbold-input-group m-LR-2 w-auto ">
+                            <div class="formbold-input-group m-LR-2 w-auto hidden">
                                 <label for="priceplusthecut" class="formbold-form-label"> priceplusthecut</label>
                                 <input type="text" name="priceplusthecut" id="priceplusthecut" placeholder="%"
                                     class="formbold-form-input shadow" />
                             </div>
-                            <div class="formbold-input-group m-LR-2 w-auto">
+                            <div class="formbold-input-group m-LR-2 w-auto hidden">
                                 <label for="finalprice" class="formbold-form-label">Price After Sale</label>
                                 <input type="text" id="finalprice" placeholder="EGP" class="formbold-form-input shadow"
                                     readonly>
@@ -225,9 +276,9 @@
                                 <input type="text" name="Storeprice" id="Storeprice" placeholder="EGP"
                                     class="formbold-form-input shadow" readonly>
                             </div>
-                            <div class="formbold-input-group m-LR-2 w-auto">
+                            <div class="formbold-input-group m-LR-2 w-auto" id="size-chart-area">
                                 <label for="chart" class="formbold-form-label">Charts</label>
-                                <div class="shadow">
+                                <div class="shadow mb-10">
                                     <select id="size-chart" class="formbold-form-input font-sm chart-sel">
                                     </select>
                                 </div>
@@ -262,6 +313,15 @@
                                     </div>
                                 </div>
                                 <div class="formbold-input-group m-LR-2">
+                                    <label for="Piece" class="formbold-form-label">Piece</label>
+                                    <div class="shadow">
+                                        <select name="Piece" id="Piece" class="formbold-form-input s530150">
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="formbold-input-group m-LR-2">
                                     <label for="Type" class="formbold-form-label">Type</label>
                                     <div class="shadow">
                                         <select name="Type" id="Type" class="formbold-form-input s530150">
@@ -272,15 +332,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="formbold-input-group m-LR-2">
-                                    <label for="Piece" class="formbold-form-label">Piece</label>
-                                    <div class="shadow">
-                                        <select name="Piece" id="Piece" class="formbold-form-input s530150">
 
-
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -299,23 +351,33 @@
 
                 <div class="formbold-input-group">
                     <div class="flex center align-items shadow p5 mb-20">
-                        <label for="name" class="formbold-form-label" style="margin-bottom:0 !important;"> Add Products
-                        </label>
-                        <button type="button" class="formbold-form-label point addbtn no-bg-i:hover line-height"
-                            id="add-more">
-                            <div class="m2" id="add-more-rotate">
-                                <i class="bi bi-plus-lg"></i>
+                        <div>
+                            <div class="add-size-card">
+                                <label for="name" class="formbold-form-label"
+                                    style="font-weight: normal;font-size: small;margin-bottom:0 !important;">
+                                    Add Size
+                                </label>
+                                <button type="button"
+                                    class="formbold-form-label point addsizebtn no-bg-i:hover line-height"
+                                    id="add-more">
+                                    <div class="m2" id="add-more-rotate">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </div>
+                                </button>
                             </div>
+                        </div>
 
-                        </button>
                     </div>
                     <div id="input-container"></div>
                 </div>
-                <button id="sub-btn" type="submit" class="formbold-btn formbold-sub-btn flex center align-items">
-                    <div id="sub-txt">Submit</div>
-                    <div id="sub-spin" class="spinner-sm hidden">
-                    </div>
-                </button>
+                <div class="flex center">
+                    <button id="sub-btn" type="submit"
+                        class="formbold-btn formbold-sub-btn flex center align-items gap-10">
+                        <div id="sub-txt">Submit</div>
+                        <div id="sub-spin" class="spinner-sm hidden">
+                        </div>
+                    </button>
+                </div>
             </form>
 
 
@@ -413,7 +475,7 @@
                             <input type="text" name="priceplusthecut" id="priceplusthecut-2" placeholder="%"
                                 class="formbold-form-input shadow">
                         </div>
-                        <div class="formbold-input-group m-LR-2 w-auto">
+                        <div class="formbold-input-group m-LR-2 w-auto hidden">
                             <label for="finalprice" class="formbold-form-label">Price After Sale</label>
                             <input type="text" id="finalprice-2" placeholder="EGP" class="formbold-form-input shadow"
                                 readonly="">
@@ -425,7 +487,7 @@
                         </div>
                         <div class="formbold-input-group m-LR-2 w-auto">
                             <label for="chart" class="formbold-form-label">Charts</label>
-                            <div class="shadow">
+                            <div class="shadow mb-10">
                                 <select id="size-chart-2" class="formbold-form-input font-sm chart-sel">
                                     <option value="" disabled="" selected="">Size Charts</option>
                                 </select>
@@ -447,6 +509,14 @@
                                     </div>
                                 </div>
                                 <div class="formbold-input-group m-LR-2">
+                                    <label for="Piece" class="formbold-form-label">Piece</label>
+                                    <div class="shadow">
+                                        <select name="Piece" id="Piece-2" class="formbold-form-input s530150">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="formbold-input-group m-LR-2">
                                     <label for="Type" class="formbold-form-label">Type</label>
                                     <div class="shadow">
                                         <select name="Type" id="Type-2" class="formbold-form-input s530150">
@@ -457,14 +527,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="formbold-input-group m-LR-2">
-                                    <label for="Piece" class="formbold-form-label">Piece</label>
-                                    <div class="shadow">
-                                        <select name="Piece" id="Piece-2" class="formbold-form-input s530150">
 
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -475,51 +538,6 @@
                                 class="formbold-form-input shadow"></textarea>
                         </div>
                     </div>
-
-
-
-                    <!-- <div class="formbold-input-group">
-                        <div class="flex center align-items">
-
-                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
-                                <label for="category" class="formbold-form-label">Category</label>
-                                <div class="shadow">
-                                    <select style="height: 49px;" name="category" id="category-2"
-                                        class="formbold-form-input">
-                                        <option value="men">Men</option>
-                                        <option value="women">Women</option>
-                                        <option value="kids">Kids</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
-                                <label for="Type" class="formbold-form-label">Type</label>
-                                <div class="shadow">
-                                    <select style="height: 49px;" name="Type" id="Type-2" class="formbold-form-input">
-                                        <option value="Top">Top</option>
-                                        <option value="Bottom">Bottom</option>
-                                        <option value="Mix">Mix</option>
-                                        <option value="Footwear">Footwear</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
-                                <label for="Piece" class="formbold-form-label">Piece</label>
-                                <div class="shadow">
-                                    <select style="height: 49px;" name="Piece" id="Piece-2" class="formbold-form-input">
-
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="formbold-input-group">
-                        <label for="productdescription" class="formbold-form-label">Product Description</label>
-                        <textarea rows="6" name="product-description" id="productdescription-2"
-                            placeholder="Type product description here..."
-                            class="formbold-form-input shadow"></textarea>
-                    </div> -->
                     <div class="formbold-input-group">
                         <div class="flex center align-items shadow p5 mb-20">
                             <label for="name" class="formbold-form-label" style="margin-bottom:0 !important;">Add
@@ -533,8 +551,8 @@
                         </div>
                         <div id="input-container2"></div>
                     </div>
-                    <button id="edit-btn" type="button" class="formbold-btn formbold-sub-btn flex center align-items"
-                        onclick="patchProduct()">
+                    <button id="edit-btn" type="button"
+                        class="formbold-btn formbold-sub-btn flex center align-items gap-10" onclick="patchProduct()">
                         <div id="sub-txt">Edit</div>
                         <div id="sub-spin" class="spinner hidden"></div>
                     </button>
@@ -556,9 +574,19 @@
                     </div>
                 </div>
                 <div id="warning-del" class="flex center warning-txt"></div>
+
+
                 <div id="deleteitem-details" class="hidden">
+                    <div class="flex center">
+                        <button id="del-btn" type="button"
+                            class="formbold-btn formbold-sub-btn flex center align-items .gap-10"
+                            onclick="deleteProduct()">
+                            <div id="sub-txt">Delete</div>
+                            <div id="sub-spin" class="spinner hidden"></div>
+                        </button>
+                    </div>
                     <div class="formbold-input-group mt-18">
-                        <div class="flex center align-items">
+                        <div class="flex center flex-wrap align-items">
                             <div class="drop-zone">
                                 <img id="mainimg1-del" src="">
                             </div>
@@ -579,6 +607,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="formbold-input-group">
                         <label for="producttitle" class="formbold-form-label">Product Title</label>
                         <input type="text" name="product-title" id="producttitle-del" class="formbold-form-input shadow"
@@ -601,7 +630,7 @@
                                 <input type="text" name="sale-amount" id="sale-amount-del"
                                     class="formbold-form-input shadow" disabled />
                             </div>
-                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
+                            <div class="formbold-input-group m-LR-2 hidden" style="width: 40%;">
                                 <label for="finalprice" class="formbold-form-label">Final Price</label>
                                 <input type="text" id="finalprice-del" placeholder="EGP"
                                     class="formbold-form-input shadow" readonly>
@@ -620,19 +649,20 @@
                                 </div>
                             </div>
                             <div class="formbold-input-group m-LR-2" style="width: 40%;">
-                                <label for="Type" class="formbold-form-label">Type</label>
-                                <div class="shadow">
-                                    <input type="text" name="Type" id="Type-del" class="formbold-form-input shadow"
-                                        disabled />
-                                </div>
-                            </div>
-                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
                                 <label for="Piece" class="formbold-form-label">Piece</label>
                                 <div class="shadow">
                                     <input type="text" name="Piece" id="Piece-del" class="formbold-form-input shadow"
                                         disabled />
                                 </div>
                             </div>
+                            <div class="formbold-input-group m-LR-2" style="width: 40%;">
+                                <label for="Type" class="formbold-form-label">Type</label>
+                                <div class="shadow">
+                                    <input type="text" name="Type" id="Type-del" class="formbold-form-input shadow"
+                                        disabled />
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="formbold-input-group">
@@ -643,11 +673,7 @@
                     <div class="formbold-input-group">
                         <div id="input-container-del"></div>
                     </div>
-                    <button id="del-btn" type="button" class="formbold-btn formbold-sub-btn flex center align-items"
-                        onclick="deleteProduct()">
-                        <div id="sub-txt">Delete</div>
-                        <div id="sub-spin" class="spinner hidden"></div>
-                    </button>
+
                 </div>
             </form>
 
