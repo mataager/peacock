@@ -59,21 +59,15 @@ const loginUser = async (username, password) => {
     document.getElementById("sub-txt").classList.remove("hidden");
     document.getElementById("sub-spin").classList.add("hidden");
 
-    // Handle specific errors
-    if (error.code === "auth/user-not-found") {
-      document.getElementById("usernameError").textContent = "Wrong username";
-      document.getElementById("usernameError").classList.remove("hidden");
-      document.getElementById("usernameError").classList.add("showinbut");
-    } else if (error.code === "auth/wrong-password") {
-      document.getElementById("passwordError").textContent = "Wrong password";
-      document.getElementById("passwordError").classList.remove("hidden");
-      document.getElementById("passwordError").classList.add("showinbut");
-    } else {
-      Swal.fire({
-        icon: "info",
-        text: "It Seems That You Had Entered Incorrect Email Or Password",
-      });
-    }
+    Swal.fire({
+      icon: "info",
+      text: "It Seems That You Had Entered Incorrect Email Or Password",
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000, // Auto-close after 3 seconds
+      timerProgressBar: true, // Show progress bar
+    });
   }
 };
 //
