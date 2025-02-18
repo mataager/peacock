@@ -431,6 +431,34 @@ function adjustContainerHeight(container) {
   container.style.height = "auto"; // Adjust height smoothly
 }
 
+// function setupDuplicateButton(button) {
+//   button.addEventListener("click", function () {
+//     const productRecord = button.closest(".product-record");
+//     const id = productRecord ? productRecord.id : null;
+
+//     if (id) {
+//       const newProductRecord = productRecord.cloneNode(true);
+//       const currentCount = document.querySelectorAll(".input-set").length + 1;
+//       newProductRecord.id = `p${currentCount}`;
+
+//       // Update IDs for inputs and elements within the new duplicate
+//       updateElementIds(newProductRecord, currentCount);
+
+//       document.getElementById("input-container").appendChild(newProductRecord);
+//       setupToggleExpand(newProductRecord.querySelector(".toggle-expand"));
+//       setupDeleteButton(newProductRecord.querySelector(".toggle-delete"));
+//       setupDuplicateButton(newProductRecord.querySelector(".toggle-duplicate"));
+//       setupFileInputHandlers(currentCount);
+//     }
+//   });
+// }
+
+// function updateElementIds(element, count) {
+//   element.querySelectorAll("[id]").forEach((el) => {
+//     const newId = el.id.replace(/\d+$/, count);
+//     el.id = newId;
+//   });
+// }
 function setupDuplicateButton(button) {
   button.addEventListener("click", function () {
     const productRecord = button.closest(".product-record");
@@ -444,7 +472,23 @@ function setupDuplicateButton(button) {
       // Update IDs for inputs and elements within the new duplicate
       updateElementIds(newProductRecord, currentCount);
 
-      document.getElementById("input-container").appendChild(newProductRecord);
+      // Set initial state for animation
+      newProductRecord.style.opacity = "0";
+      newProductRecord.style.transform = "translateY(-20px)";
+      newProductRecord.style.transition =
+        "opacity 0.4s ease-out, transform 0.4s ease-out";
+
+      // Append the cloned record
+      const inputContainer = document.getElementById("input-container");
+      inputContainer.appendChild(newProductRecord);
+
+      // Trigger animation after appending
+      setTimeout(() => {
+        newProductRecord.style.opacity = "1";
+        newProductRecord.style.transform = "translateY(0)";
+      }, 10);
+
+      // Reinitialize event handlers
       setupToggleExpand(newProductRecord.querySelector(".toggle-expand"));
       setupDeleteButton(newProductRecord.querySelector(".toggle-delete"));
       setupDuplicateButton(newProductRecord.querySelector(".toggle-duplicate"));
@@ -452,13 +496,6 @@ function setupDuplicateButton(button) {
     }
   });
 }
-
-// function updateElementIds(element, count) {
-//   element.querySelectorAll("[id]").forEach((el) => {
-//     const newId = el.id.replace(/\d+$/, count);
-//     el.id = newId;
-//   });
-// }
 
 function updateElementIds(record, count) {
   record.querySelectorAll("[id]").forEach((element) => {

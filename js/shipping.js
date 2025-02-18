@@ -466,6 +466,13 @@ async function toggleOrderDetails(event) {
       `;
       row.after(detailsRow);
 
+      // Scroll to the first row both horizontally and vertically
+      row.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+
       // Attach click event to images
       document.querySelectorAll(".clickable-image").forEach((img) => {
         img.addEventListener("click", openModal);
@@ -487,7 +494,7 @@ const span = document.getElementsByClassName("close")[0];
 
 function openModal(event) {
   event.stopPropagation(); // Prevent triggering row click event
-  modal.style.display = "block";
+  modal.style.display = "flex";
   modalImg.src = event.target.src;
   captionText.innerHTML = event.target.alt;
 }
