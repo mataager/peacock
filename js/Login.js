@@ -309,7 +309,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (!hasError) {
+    // if (!hasError) {
+    //   loginUser(username, password);
+    // }
+    else {
       loginUser(username, password);
     }
   });
