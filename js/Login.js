@@ -50,8 +50,7 @@ const loginUser = async (username, password) => {
       localStorage.setItem("endingDate", storeData["ending-date"]);
     }
 
-    // Redirect after fetching the necessary data
-    window.location.replace("./main.html");
+    redirectToMainPage();
   } catch (error) {
     console.error("Login Error:", error.message);
 
@@ -70,8 +69,6 @@ const loginUser = async (username, password) => {
     });
   }
 };
-//
-
 // Function to send a password reset email
 async function sendResetEmail() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
@@ -184,136 +181,48 @@ async function sendResetEmail() {
   }
 }
 // // Event listener for form submission
-// document.getElementById("LogIn").addEventListener("submit", function (event) {
-//   event.preventDefault(); // Prevent the default form submission
+document.getElementById("LogIn").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission
 
-//   const username = document.getElementById("username").value.trim();
-//   const password = document.getElementById("password").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-//   // Clear previous error messages
-//   document.getElementById("usernameError").classList.add("hidden");
-//   document.getElementById("passwordError").classList.add("hidden");
+  // Clear previous error messages
+  document.getElementById("usernameError").classList.add("hidden");
+  document.getElementById("passwordError").classList.add("hidden");
 
-//   // Check if username is empty
-//   if (username === "") {
-//     document.getElementById("usernameError").textContent =
-//       "Email field is required!";
-//     document.getElementById("usernameError").classList.remove("hidden");
-//     setTimeout(() => {
-//       document.getElementById("usernameError").classList.add("showinbut");
-//     }, 10);
-//     return;
-//   }
+  // Check if username is empty
+  if (username === "") {
+    document.getElementById("usernameError").textContent =
+      "Email field is required!";
+    document.getElementById("usernameError").classList.remove("hidden");
+    setTimeout(() => {
+      document.getElementById("usernameError").classList.add("showinbut");
+    }, 10);
+    return;
+  }
 
-//   // Check if password is empty
-//   if (password === "") {
-//     document.getElementById("passwordError").textContent =
-//       "Password field is required!";
-//     document.getElementById("passwordError").classList.remove("hidden");
-//     setTimeout(() => {
-//       document.getElementById("passwordError").classList.add("showinbut");
-//     }, 10);
-//     return;
-//   }
-//   // Call login function
-//   loginUser(username, password);
-// });
-// document.addEventListener("DOMContentLoaded", function () {
-//   const loginForm = document.getElementById("LogIn");
-//   const usernameInput = document.getElementById("username");
-//   const passwordInput = document.getElementById("password");
-//   const usernameError = document.getElementById("usernameError");
-//   const passwordError = document.getElementById("passwordError");
-
-//   loginForm.addEventListener("submit", function (event) {
-//     event.preventDefault(); // Prevent default form submission
-
-//     const username = usernameInput.value.trim();
-//     const password = passwordInput.value.trim();
-
-//     // Reset previous errors
-//     usernameError.classList.add("hidden");
-//     passwordError.classList.add("hidden");
-
-//     let hasError = false;
-
-//     if (username === "") {
-//       usernameError.textContent = "Email field is required!";
-//       usernameError.classList.remove("hidden");
-//       setTimeout(() => {
-//         document.getElementById("usernameError").classList.add("showinbut");
-//       }, 10);
-//       hasError = true;
-//       return;
-//     }
-
-//     if (password === "") {
-//       passwordError.textContent = "Password field is required!";
-//       passwordError.classList.remove("hidden");
-//       setTimeout(() => {
-//         document.getElementById("passwordError").classList.add("showinbut");
-//       }, 10);
-//       hasError = true;
-//       return;
-//     }
-
-//     if (!hasError) {
-//       loginUser(username, password);
-//     }
-//   });
-
-//   // Prevent zooming on mobile when focusing input fields
-//   [usernameInput, passwordInput].forEach((input) => {
-//     input.addEventListener("focus", () => {
-//       document.body.style.zoom = "1";
-//     });
-//   });
-// });
-
-document.addEventListener("DOMContentLoaded", function () {
-  const loginBtn = document.getElementById("loginbtn");
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
-  const usernameError = document.getElementById("usernameError");
-  const passwordError = document.getElementById("passwordError");
-
-  loginBtn.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent default form submission
-
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    // Reset previous errors
-    usernameError.classList.add("hidden");
-    passwordError.classList.add("hidden");
-
-    let hasError = false;
-
-    if (username === "") {
-      usernameError.textContent = "Email field is required!";
-      usernameError.classList.remove("hidden");
-      setTimeout(() => {
-        usernameError.classList.add("showinbut");
-      }, 10);
-      hasError = true;
-      return;
-    }
-
-    if (password === "") {
-      passwordError.textContent = "Password field is required!";
-      passwordError.classList.remove("hidden");
-      setTimeout(() => {
-        passwordError.classList.add("showinbut");
-      }, 10);
-      hasError = true;
-      return;
-    }
-
-    // if (!hasError) {
-    //   loginUser(username, password);
-    // }
-    else {
-      loginUser(username, password);
-    }
-  });
+  // Check if password is empty
+  if (password === "") {
+    document.getElementById("passwordError").textContent =
+      "Password field is required!";
+    document.getElementById("passwordError").classList.remove("hidden");
+    setTimeout(() => {
+      document.getElementById("passwordError").classList.add("showinbut");
+    }, 10);
+    return;
+  }
+  // Call login function
+  else {
+    loginUser(username, password);
+  }
 });
+
+function redirectToMainPage() {
+  if (window.location.replace) {
+    window.location.replace("./main.html");
+  } else {
+    // Fallback for browsers that don't support window.location.replace
+    window.location.href = "./main.html";
+  }
+}
