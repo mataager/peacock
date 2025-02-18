@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="hydrated">
+
+<head>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./favicon.png" rel="icon" type="image/x-icon">
+    <title id="title"></title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./js/static.js"></script>
+    <link rel="stylesheet" href="./css/all.css">
+    <link rel="stylesheet" href="./css/alll.css">
+</head>
+
+<body id="top">
+    <main class="mb-20">
+        <div class="formbold-form-wrapper flex center">
+            <div class="signinup">
+                <div class="pbm-container">
+                    <img class="pbm-img" src="./assets/images/pbm.svg" alt="PBM">
+                    <div class="overlay-ppm">
+                        <a href="https://www.matager.online" target="_blank">Go to Matager</a>
+                    </div>
+                </div>
+
+
+                <div class="p-20 w-available flex center column">
+                    <div class="flex flex-column align-items">
+                        <img class="w-100" src="./assets/images/iicon.png">
+                    </div>
+                    <form class="flex flex-column align-items" id="LogIn">
+                        <div class="formbold-input-group max-500 relative min-height92">
+                            <label for="username" class="formbold-form-label max-500">Email</label>
+                            <input type="text" name="username" id="username" placeholder="Enter your Email"
+                                class="formbold-form-input shadow max-500 login-form-inbut" />
+                            <p id="usernameError" class="log-error-message hidden">Wrong Email</p>
+                            <!-- Username error -->
+                        </div>
+                        <div class="formbold-input-group max-500 relative min-height92">
+                            <label for="password" class="formbold-form-label max-500">Password</label>
+                            <input type="password" name="password" id="password" placeholder="Enter your Password"
+                                class="formbold-form-input shadow max-500 login-form-inbut" />
+                            <p id="passwordError" class="log-error-message hidden">Incorrect password</p>
+                            <!-- Password error -->
+                        </div>
+                        <button id="LogInButton" type="submit" class="formbold-btn flex center align-items max-500"
+                            style="width: 100px;height: 20px;font-size: small;">
+                            <div id="sub-txt">
+                                <p>Login</p>
+                            </div>
+                            <div>
+                                <div id="sub-spin" class="spinner-sm-login hidden"></div>
+                            </div>
+                        </button>
+
+                        <!-- Forgot Password Link -->
+                        <div class="forgot-password">
+                            <a href="#" id="forgotPasswordLink" onclick="sendResetEmail()">Forgot Password?</a>
+                        </div>
+                        <span id="resetMessage" class="hidden resetpasswordMessage"></span>
+                        <div id="sub-spin-resetMessage" class="spinner-sm-login hidden"></div>
+                    </form>
+                </div>
+            </div>
+            <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+            <script src="./js/checksubscription.js"></script>
+            <script src="./js/inithialize-firebase.js"></script>
+            <script src="./js/Login.js"></script>
+        </div>
+    </main>
+</body>
+
+</html>
