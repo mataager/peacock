@@ -183,39 +183,83 @@ async function sendResetEmail() {
     }, 10); // Delay to ensure transition
   }
 }
-// Event listener for form submission
-document.getElementById("LogIn").addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent the default form submission
+// // Event listener for form submission
+// document.getElementById("LogIn").addEventListener("submit", function (event) {
+//   event.preventDefault(); // Prevent the default form submission
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+//   const username = document.getElementById("username").value.trim();
+//   const password = document.getElementById("password").value.trim();
 
-  // Clear previous error messages
-  document.getElementById("usernameError").classList.add("hidden");
-  document.getElementById("passwordError").classList.add("hidden");
+//   // Clear previous error messages
+//   document.getElementById("usernameError").classList.add("hidden");
+//   document.getElementById("passwordError").classList.add("hidden");
 
-  // Check if username is empty
-  if (username === "") {
-    document.getElementById("usernameError").textContent =
-      "Email field is required!";
-    document.getElementById("usernameError").classList.remove("hidden");
-    setTimeout(() => {
-      document.getElementById("usernameError").classList.add("showinbut");
-    }, 10);
-    return;
-  }
+//   // Check if username is empty
+//   if (username === "") {
+//     document.getElementById("usernameError").textContent =
+//       "Email field is required!";
+//     document.getElementById("usernameError").classList.remove("hidden");
+//     setTimeout(() => {
+//       document.getElementById("usernameError").classList.add("showinbut");
+//     }, 10);
+//     return;
+//   }
 
-  // Check if password is empty
-  if (password === "") {
-    document.getElementById("passwordError").textContent =
-      "Password field is required!";
-    document.getElementById("passwordError").classList.remove("hidden");
-    setTimeout(() => {
-      document.getElementById("passwordError").classList.add("showinbut");
-    }, 10);
-    return;
-  }
+//   // Check if password is empty
+//   if (password === "") {
+//     document.getElementById("passwordError").textContent =
+//       "Password field is required!";
+//     document.getElementById("passwordError").classList.remove("hidden");
+//     setTimeout(() => {
+//       document.getElementById("passwordError").classList.add("showinbut");
+//     }, 10);
+//     return;
+//   }
+//   // Call login function
+//   loginUser(username, password);
+// });
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.getElementById("LogIn");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const usernameError = document.getElementById("usernameError");
+  const passwordError = document.getElementById("passwordError");
 
-  // Call login function
-  loginUser(username, password);
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    // Reset previous errors
+    usernameError.classList.add("hidden");
+    passwordError.classList.add("hidden");
+
+    let hasError = false;
+
+    if (username === "") {
+      usernameError.textContent = "Email field is required!";
+      usernameError.classList.remove("hidden");
+      usernameError.classList.add("showinbut");
+      hasError = true;
+    }
+
+    if (password === "") {
+      passwordError.textContent = "Password field is required!";
+      passwordError.classList.remove("hidden");
+      passwordError.classList.add("showinbut");
+      hasError = true;
+    }
+
+    if (!hasError) {
+      loginUser(username, password);
+    }
+  });
+
+  // Prevent zooming on mobile when focusing input fields
+  [usernameInput, passwordInput].forEach((input) => {
+    input.addEventListener("focus", () => {
+      document.body.style.zoom = "1";
+    });
+  });
 });
