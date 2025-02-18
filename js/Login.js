@@ -49,9 +49,17 @@ const loginUser = async (username, password) => {
       localStorage.setItem("planType", storeData.plan);
       localStorage.setItem("endingDate", storeData["ending-date"]);
     }
-
     redirectToMainPage();
   } catch (error) {
+    Swal.fire({
+      icon: "error",
+      text: error.message,
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 10000, // Auto-close after 3 seconds
+      timerProgressBar: true, // Show progress bar
+    });
     console.error("Login Error:", error.message);
 
     // Hide spinner and show text again
@@ -101,29 +109,6 @@ async function sendResetEmail() {
     // Show preloader
     preloader.classList.remove("hidden");
 
-    // // Call Firebase's sendPasswordResetEmail method
-    // const sendEmailPromise = auth.sendPasswordResetEmail(email);
-    // const delayPromise = new Promise((resolve) => setTimeout(resolve, 5000)); // Ensures at least 5 sec delay
-
-    // // Wait for both the email to send and the 5-second delay
-    // await Promise.all([sendEmailPromise, delayPromise]);
-
-    // // Hide preloader and update the "Forgot Password?" link
-    // preloader.classList.add('hidden');
-    // forgotPasswordLink.textContent = "Resend Again!";
-    // forgotPasswordLink.classList.remove('hidden');
-    // setTimeout(() => {
-    //     forgotPasswordLink.classList.add('showinbut');
-    // }, 10); // Delay to ensure transition
-
-    // // Display success message
-    // resetMessage.textContent = "Password reset link sent successfully!";
-    // resetMessage.classList.remove('hidden');
-    // setTimeout(() => {
-    //     resetMessage.classList.add('showinbut');
-    // }, 1000); // Delay to ensure transition
-    // resetMessage.classList.add('success');
-    // Call Firebase's sendPasswordResetEmail method
     const sendEmailPromise = auth.sendPasswordResetEmail(email);
     const delayPromise = new Promise((resolve) => setTimeout(resolve, 5000)); // Ensures at least 5 sec delay
 
