@@ -51,7 +51,7 @@ const loginUser = async (username, password) => {
     }
 
     // Redirect after fetching the necessary data
-    window.location.href = "./main.html";
+    window.location.replace("./main.html");
   } catch (error) {
     console.error("Login Error:", error.message);
 
@@ -240,15 +240,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (username === "") {
       usernameError.textContent = "Email field is required!";
       usernameError.classList.remove("hidden");
-      usernameError.classList.add("showinbut");
+      setTimeout(() => {
+        document.getElementById("usernameError").classList.add("showinbut");
+      }, 10);
       hasError = true;
+      return;
     }
 
     if (password === "") {
       passwordError.textContent = "Password field is required!";
       passwordError.classList.remove("hidden");
-      passwordError.classList.add("showinbut");
+      setTimeout(() => {
+        document.getElementById("passwordError").classList.add("showinbut");
+      }, 10);
       hasError = true;
+      return;
     }
 
     if (!hasError) {
