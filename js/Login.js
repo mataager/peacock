@@ -218,14 +218,66 @@ async function sendResetEmail() {
 //   // Call login function
 //   loginUser(username, password);
 // });
+// document.addEventListener("DOMContentLoaded", function () {
+//   const loginForm = document.getElementById("LogIn");
+//   const usernameInput = document.getElementById("username");
+//   const passwordInput = document.getElementById("password");
+//   const usernameError = document.getElementById("usernameError");
+//   const passwordError = document.getElementById("passwordError");
+
+//   loginForm.addEventListener("submit", function (event) {
+//     event.preventDefault(); // Prevent default form submission
+
+//     const username = usernameInput.value.trim();
+//     const password = passwordInput.value.trim();
+
+//     // Reset previous errors
+//     usernameError.classList.add("hidden");
+//     passwordError.classList.add("hidden");
+
+//     let hasError = false;
+
+//     if (username === "") {
+//       usernameError.textContent = "Email field is required!";
+//       usernameError.classList.remove("hidden");
+//       setTimeout(() => {
+//         document.getElementById("usernameError").classList.add("showinbut");
+//       }, 10);
+//       hasError = true;
+//       return;
+//     }
+
+//     if (password === "") {
+//       passwordError.textContent = "Password field is required!";
+//       passwordError.classList.remove("hidden");
+//       setTimeout(() => {
+//         document.getElementById("passwordError").classList.add("showinbut");
+//       }, 10);
+//       hasError = true;
+//       return;
+//     }
+
+//     if (!hasError) {
+//       loginUser(username, password);
+//     }
+//   });
+
+//   // Prevent zooming on mobile when focusing input fields
+//   [usernameInput, passwordInput].forEach((input) => {
+//     input.addEventListener("focus", () => {
+//       document.body.style.zoom = "1";
+//     });
+//   });
+// });
+
 document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("LogIn");
+  const loginBtn = document.getElementById("loginbtn");
   const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
   const usernameError = document.getElementById("usernameError");
   const passwordError = document.getElementById("passwordError");
 
-  loginForm.addEventListener("submit", function (event) {
+  loginBtn.addEventListener("click", function (event) {
     event.preventDefault(); // Prevent default form submission
 
     const username = usernameInput.value.trim();
@@ -241,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
       usernameError.textContent = "Email field is required!";
       usernameError.classList.remove("hidden");
       setTimeout(() => {
-        document.getElementById("usernameError").classList.add("showinbut");
+        usernameError.classList.add("showinbut");
       }, 10);
       hasError = true;
       return;
@@ -251,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
       passwordError.textContent = "Password field is required!";
       passwordError.classList.remove("hidden");
       setTimeout(() => {
-        document.getElementById("passwordError").classList.add("showinbut");
+        passwordError.classList.add("showinbut");
       }, 10);
       hasError = true;
       return;
@@ -260,12 +312,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!hasError) {
       loginUser(username, password);
     }
-  });
-
-  // Prevent zooming on mobile when focusing input fields
-  [usernameInput, passwordInput].forEach((input) => {
-    input.addEventListener("focus", () => {
-      document.body.style.zoom = "1";
-    });
   });
 });
